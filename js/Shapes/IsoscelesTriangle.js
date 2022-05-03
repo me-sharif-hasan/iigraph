@@ -24,33 +24,27 @@ class IsoscelesTriangle extends Polygon{
       }
       this.createPoints(points);
     }
-  
-    createBorder(){
-      let borderPoints=this.getPoints().getSvgPathPoints();
-      this.updateBorder("points",borderPoints);
-      this.updateBorder("fill","none");
-      this.updateBorder("stroke","red");
-    }
-    updateDimension(e){
-      let mx=e.layerX;
-      let my=e.layerY;
-  
-      let x=this.pos.x;
-      let y=this.pos.y;
-      let rx=this.pos.rx;
-      let ry=this.pos.ry;
-  
-      let w=Math.abs(rx-x);
-      let h=Math.abs(ry-y);
-      if(Math.abs(e.sx-this.pos.rx)<Math.abs(e.sx-this.pos.x)) e.dx*=-1;
-      if(Math.abs(e.sy-this.pos.ry)<Math.abs(e.sy-this.pos.y)) e.dy*=-1;
-      this.pos.x+=e.dx/2;
-      this.pos.y+=e.dy/2;
-      this.pos.rx-=e.dx/2;
-      this.pos.ry-=e.dy/2;
-  
-      this.createPoints(this.pos.x+","+this.pos.y+" "+this.pos.x+","+this.pos.ry+" "+this.pos.rx+","+this.pos.ry+" "+this.pos.rx+","+this.pos.y);
-      this.createBorder();
+    
+    doResize(dx,dy,pointid){
+      switch(pointid){
+      case 0:
+        //left side x axis
+        this.getPoints().shiftTo(dx,dy,0);
+        this.getPoints().shiftTo(-dx,dy,1);
+        break;
+      case 1:
+        //left side x axis
+        this.getPoints().shiftTo(dx,dy,1);
+        this.getPoints().shiftTo(-dx,dy,0);
+        break;  
+      case 2:
+        //left side x axis
+        this.getPoints().shiftTo(dx,dy,2);
+        this.getPoints().shiftTo(dx,0,0);
+        this.getPoints().shiftTo(dx,0,1);
+        break;  
+      }
+      this.createPoints();
     }
   }
   

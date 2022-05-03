@@ -9,13 +9,19 @@ class Points{
     set(n,point){
         this.pos[n]=point;
     }
-    shiftTo(dx,dy){
+    shiftTo(dx,dy,key){
         let ref=this;
-        Object.keys(this.pos).forEach(function(key){
+        if(key==undefined){
+            Object.keys(this.pos).forEach(function(k){
+                let x=ref.get(k)["x"]-dx;
+                let y=ref.get(k)["y"]-dy;
+                ref.set(k,{"x":x,"y":y});
+            });
+        }else{
             let x=ref.get(key)["x"]-dx;
             let y=ref.get(key)["y"]-dy;
             ref.set(key,{"x":x,"y":y});
-        });
+        }
     }
     forEachPoint(fn){
         let ref=this;

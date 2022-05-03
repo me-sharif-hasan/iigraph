@@ -46,3 +46,10 @@
   top: 0;
   left: 0;
 }
+
+.control-circle{
+  fill:#00000052;
+}
+.control-circle:hover {
+  r: 15px;
+}

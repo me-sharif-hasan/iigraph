@@ -34,32 +34,21 @@ class PolygonBorderManager{
                 let c=ref.getControlCycle(id);
                 ref.getBase().addParameter("cx",point.x,c);
                 ref.getBase().addParameter("cy",point.y,c);
-                ref.getBase().addParameter("id",id,c);
                 ref.getBase().addParameter("r",0,c);
             })
         }else{
-            console.log("error, can't draw point for "+typeof thid.getBase());
-        }
-        
-        
-        if(this.controllCycles==undefined){
-            this.controllCycles={};
-            if(this.getBase() instanceof Polygon){
-                let points=this.getBase().getPoints();
-                points.forEachPoint(function(id,point){
-                    let c=ref.getBase().createSVGDOM("circle");
-                })
-                //console.log(points);
-            }else{
-                console.log("error, can't draw point for "+typeof thid.getBase());
-            }
+            console.log("error, can't draw point for "+this.getBase().constructor.name);
         }
     }
     getControlCycle(key){
         if(this.controlCycles==undefined) this.controlCycles={};
+        if(key==undefined) return this.controlCycles;
         if(this.controlCycles[key]==undefined){
             this.controlCycles[key]=this.getBase().createSVGDOM("circle");
-            this.getBase().create(this.controlCycles[key])
+            this.getBase().addParameter("pointid",key,this.controlCycles[key]);
+            this.getBase().addParameter("class","control-circle",this.controlCycles[key]);
+            this.getBase().create(this.controlCycles[key]);
+            this.getBase().resizerControlCircleInit(this.controlCycles[key]);
         }
         return this.controlCycles[key];
     }
@@ -72,9 +61,16 @@ class PolygonBorderManager{
     }
     highlightBorder(flag){
         let ref=this;
-        this.getBase().addParameter("stroke-width",flag*1/2,this.getHighlighter());
+        let base=ref.getBase();
+
+        if(base.isResizing()){
+            flag=true;
+        }
+
+
+        base.addParameter("stroke-width",flag*1/2,this.getHighlighter());
         Object.keys(this.controlCycles).forEach(function(key){
-            ref.getBase().addParameter("r",flag*4,ref.getControlCycle(key));
+            base.addParameter("r",8*flag,ref.getControlCycle(key));
         });
     }
     getBase(){

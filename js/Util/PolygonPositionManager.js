@@ -20,7 +20,7 @@ class PolygonPositionManager{
                 ref.getBase().highlightBorder(true);
             }
         }
-        shape.onmouseup=function(e){
+        plane.onmouseup=shape.onmouseup=function(e){
             shape.onmousemove=plane.onmousemove=undefined;
         }
         shape.onmouseover=function(e) {

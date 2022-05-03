@@ -2,6 +2,7 @@ class Shape{
   constructor(canvas,shapeName){
     this.base=canvas;
     this.shapeName=shapeName;
+    this.resizing=false;
     this.shape=this.createSVGDOM();
     this.create();
     this.initDefault();
@@ -14,6 +15,7 @@ class Shape{
     this.currentInteraction=undefined;
     this.positionManager=new PositionerFactory(this);
     this.borderManager=new BorderManagerFactory(this);
+    this.resizeManager=new ResizerFactory(this); //have to call after border creation
   }
   create(svgDOM){
       this.base.appendChild(svgDOM==undefined?this.shape:svgDOM);
@@ -27,10 +29,23 @@ class Shape{
   getPlane(){
     return this.base;
   }
-
+/* Handles manager calles instead of directly calling them*/
+  isResizing(flag){
+    if(flag!=undefined) this.resizing=flag;
+    return this.resizing;
+  }
   highlightBorder(flag){
     if(this.borderManager!=undefined){
       this.borderManager.highlightBorder(flag);
+    }else{
+      console.log("No border manager found");
+    }
+  }
+  resizerControlCircleInit(circle){
+    if(this.resizeManager!=undefined){
+      return this.resizeManager.resizerControlCircleInit(circle);
+    }else{
+      console.log("No resize manager found");
     }
   }
 
