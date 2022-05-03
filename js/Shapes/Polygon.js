@@ -8,6 +8,7 @@ class Polygon extends Shape{
       this.setPoints(points);
     }
     this.addParameter("points",this.getPoints().getSvgPathPoints());
+    this.borderManager.getManager().redraw();
   }
   setPoints(points){
     this.pos=new Points(points);

@@ -1,9 +1,9 @@
 class Shape{
-  positionHandler=undefined;
   constructor(canvas,shapeName){
     this.base=canvas;
     this.shapeName=shapeName;
-    this.createSVGDOM();
+    this.shape=this.createSVGDOM();
+    this.create();
     this.initDefault();
 
     let bbox=this.base.getClientRects()[0];
@@ -12,7 +12,11 @@ class Shape{
     this.canvasX=bbox.left;
     this.canvasY=bbox.top;
     this.currentInteraction=undefined;
-    this.positionHandler=new Positioner(this);
+    this.positionManager=new PositionerFactory(this);
+    this.borderManager=new BorderManagerFactory(this);
+  }
+  create(svgDOM){
+      this.base.appendChild(svgDOM==undefined?this.shape:svgDOM);
   }
   getSVGShape(){
     return this.shape;
@@ -24,27 +28,32 @@ class Shape{
     return this.base;
   }
 
+  highlightBorder(flag){
+    if(this.borderManager!=undefined){
+      this.borderManager.highlightBorder(flag);
+    }
+  }
+
   initDefault(){
     this.addParameter("fill","#ff00ff");
     this.addParameter("stroke","#868686");
     this.addParameter("stroke-width",1);
     this.addParameter("style","pointer-events:all;")
-
+/*
     this.borderWidth=2;
     this.updateBorder("stroke-width","0");
     this.updateBorder("pointer-events","stroke");
     this.updateBorder("cursor","crosshair");
     this.addEventListeners();
     this.addBorderEventListeners();
+*/
   }
-  createSVGDOM(){
-    this.shape=document.createElementNS("http://www.w3.org/2000/svg", this.shapeName);
-    this.border=document.createElementNS("http://www.w3.org/2000/svg", this.shapeName);
-    this.base.appendChild(this.shape);
-    this.base.appendChild(this.border);
+  createSVGDOM(customShape){
+    let shape=document.createElementNS("http://www.w3.org/2000/svg", (customShape==undefined?this.shapeName:customShape));
+    return shape;
   }
-  addParameter(key,value){
-    this.shape.setAttributeNS(null, key, value);
+  addParameter(key,value,obj){
+    (obj==undefined?this.shape:obj).setAttributeNS(null, key, value);
   }
   updateParameter(key,value){
     if(this.shape.hasAttribute(key)){

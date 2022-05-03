@@ -1,4 +1,4 @@
-class PolygonPositioner{
+class PolygonPositionManager{
     constructor(shape){
         this.base=shape;
         this.initEventListeners();
@@ -21,6 +21,12 @@ class PolygonPositioner{
         }
         shape.onmouseup=function(e){
             shape.onmousemove=plane.onmousemove=undefined;
+        }
+        shape.onmouseover=function(e) {
+            ref.getBase().highlightBorder(true);
+        }
+        shape.onmouseout=function(e) {
+            ref.getBase().highlightBorder(false);
         }
     }
 

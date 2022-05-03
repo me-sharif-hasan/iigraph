@@ -1,3 +1,0 @@
-class BorderManager extends Poligon{
-    
-}

@@ -1,9 +1,10 @@
-class Positioner{
+class PositionerFactory{
     manager=undefined;
     constructor(shape){
         this.base=shape;
         if(shape instanceof Polygon){
-            this.manager=new PolygonPositioner(shape);
+            console.log(shape);
+            this.manager=new PolygonPositionManager(shape);
         }else if(shape instanceof Shape){
 
         }
