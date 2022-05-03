@@ -1,59 +1,81 @@
 class PolygonBorderManager{
     constructor(shape){
         this.baseShape=shape;
-        this.borderLine1=this.createBorder();
-        this.borderLine2=this.createBorder();
-        this.borderLine3=this.createBorder();
-        this.borderLine4=this.createBorder();
-
-        this.getBase().create(this.borderLine1);
-        this.getBase().create(this.borderLine2);
-        this.getBase().create(this.borderLine3);
-        this.getBase().create(this.borderLine4);
     }
-    initBorders(){
+    updateBorders(){
+        this.updatetHighlighter();
+        this.updateControllCycles();
+    }
+
+    updatetHighlighter(){
         let svgShape=this.getBase().getSVGShape();
         let bounds=svgShape.getBBox();
-        console.log(bounds);
-        let points={
-            0:{
-                "x":bounds.x,
-                "y":bounds.y
-            },
-            1:{
-                "x":bounds.x,
-                "y":bounds.y+bounds.height
-            },
-            2:{
-                "x":bounds.x+bounds.width,
-                "y":bounds.y+bounds.height
-            },
-            3:{
-                "x":bounds.x+bounds.width,
-                "y":bounds.y
-            }
-
+        let highlightShapeRect=this.getHighlighter();
+        if(highlightShapeRect==undefined){
+            highlightShapeRect=this.getBase().createSVGDOM("rect");
+            this.highlighterRect=highlightShapeRect;
+            this.getBase().create(this.getHighlighter());
+            this.getBase().addParameter("stroke-width",0,highlightShapeRect);
+            this.getBase().addParameter("fill","none",highlightShapeRect);
+            this.getBase().addParameter("stroke","#626262",this.getHighlighter());
+            this.getBase().addParameter("stroke-dasharray","5",this.getHighlighter());
         }
-        this.l1=new Points({0:points[0],1:points[1]});
-        this.l2=new Points({0:points[0],1:points[3]});
-        this.l3=new Points({0:points[3],1:points[2]});
-        this.l4=new Points({0:points[1],1:points[2]});
-        this.points=new Points(points);
-
-        this.getBase().addParameter("points",this.l1.getSvgPathPoints(),this.borderLine1);
-        this.getBase().addParameter("points",this.l2.getSvgPathPoints(),this.borderLine2);
-        this.getBase().addParameter("points",this.l3.getSvgPathPoints(),this.borderLine3);
-        this.getBase().addParameter("points",this.l4.getSvgPathPoints(),this.borderLine4);
+        this.getBase().addParameter("x",bounds.x-2,highlightShapeRect);
+        this.getBase().addParameter("y",bounds.y-2,highlightShapeRect);
+        this.getBase().addParameter("width",bounds.width+4,highlightShapeRect);
+        this.getBase().addParameter("height",bounds.height+4,highlightShapeRect);
     }
-    createBorder(){
-        let line=this.getBase().createSVGDOM("polygon");
-        this.getBase().addParameter("stroke-width","3",line);
-        this.getBase().addParameter("stroke","green",line);
-        this.getBase().addParameter("stroke-linejoin","round",line);
-        return line;
+
+    updateControllCycles(){
+        let ref=this;
+        if(this.getBase() instanceof Polygon){
+            let points=this.getBase().getPoints();
+            points.forEachPoint(function(id,point){
+                let c=ref.getControlCycle(id);
+                ref.getBase().addParameter("cx",point.x,c);
+                ref.getBase().addParameter("cy",point.y,c);
+                ref.getBase().addParameter("id",id,c);
+                ref.getBase().addParameter("r",0,c);
+            })
+        }else{
+            console.log("error, can't draw point for "+typeof thid.getBase());
+        }
+        
+        
+        if(this.controllCycles==undefined){
+            this.controllCycles={};
+            if(this.getBase() instanceof Polygon){
+                let points=this.getBase().getPoints();
+                points.forEachPoint(function(id,point){
+                    let c=ref.getBase().createSVGDOM("circle");
+                })
+                //console.log(points);
+            }else{
+                console.log("error, can't draw point for "+typeof thid.getBase());
+            }
+        }
+    }
+    getControlCycle(key){
+        if(this.controlCycles==undefined) this.controlCycles={};
+        if(this.controlCycles[key]==undefined){
+            this.controlCycles[key]=this.getBase().createSVGDOM("circle");
+            this.getBase().create(this.controlCycles[key])
+        }
+        return this.controlCycles[key];
+    }
+
+    getHighlighter(){
+        return this.highlighterRect;
     }
     redraw(){
-        this.initBorders();
+        this.updateBorders();
+    }
+    highlightBorder(flag){
+        let ref=this;
+        this.getBase().addParameter("stroke-width",flag*1/2,this.getHighlighter());
+        Object.keys(this.controlCycles).forEach(function(key){
+            ref.getBase().addParameter("r",flag*4,ref.getControlCycle(key));
+        });
     }
     getBase(){
         return this.baseShape;

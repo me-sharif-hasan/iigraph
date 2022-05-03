@@ -17,6 +17,7 @@ class PolygonPositionManager{
                 ref.getBase().jump(dx,dy);
                 sx=em.layerX;
                 sy=em.layerY;
+                ref.getBase().highlightBorder(true);
             }
         }
         shape.onmouseup=function(e){

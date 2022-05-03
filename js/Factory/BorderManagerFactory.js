@@ -7,4 +7,9 @@ class BorderManagerFactory{
     getManager(){
         return this.manager;
     }
+    highlightBorder(flag){
+        if(this.manager!=undefined&&this.manager.highlightBorder!=undefined){
+            this.manager.highlightBorder(flag);
+        }
+    }
 }

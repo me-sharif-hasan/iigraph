@@ -17,6 +17,12 @@ class Points{
             ref.set(key,{"x":x,"y":y});
         });
     }
+    forEachPoint(fn){
+        let ref=this;
+        Object.keys(this.pos).forEach(function (key) {
+            fn(key,ref.pos[key]);
+        })
+    }
     getSvgPathPoints(){
         let path="";
         let ref=this;
