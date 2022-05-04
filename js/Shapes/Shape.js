@@ -3,6 +3,7 @@ class Shape{
     this.base=canvas;
     this.shapeName=shapeName;
     this.resizing=false;
+    this.clicked=false;
     this.shape=this.createSVGDOM();
     this.create();
     this.initDefault();
@@ -16,6 +17,10 @@ class Shape{
     this.positionManager=new PositionerFactory(this);
     this.borderManager=new BorderManagerFactory(this);
     this.resizeManager=new ResizerFactory(this); //have to call after border creation
+  }
+  isClicked(flag){
+    if(flag!=undefined) this.clicked=flag;
+    return this.clicked;
   }
   create(svgDOM){
       this.base.appendChild(svgDOM==undefined?this.shape:svgDOM);
@@ -34,9 +39,9 @@ class Shape{
     if(flag!=undefined) this.resizing=flag;
     return this.resizing;
   }
-  highlightBorder(flag){
+  highlightBorder(flag,border,circles){
     if(this.borderManager!=undefined){
-      this.borderManager.highlightBorder(flag);
+      this.borderManager.highlightBorder(flag,border,circles);
     }else{
       console.log("No border manager found");
     }

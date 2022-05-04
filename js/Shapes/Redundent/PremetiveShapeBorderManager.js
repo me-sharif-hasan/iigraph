@@ -1,4 +1,4 @@
-class PolygonBorderManager{
+class PremetiveShapeBorderManager{
     constructor(shape){
         this.baseShape=shape;
     }
@@ -26,19 +26,31 @@ class PolygonBorderManager{
         this.getBase().addParameter("height",bounds.height+4,highlightShapeRect);
     }
 
+    assignControlCircle(x,y,id){
+        let c=this.getControlCycle(id);
+        this.getBase().addParameter("cx",x,c);
+        this.getBase().addParameter("cy",y,c);
+        this.getBase().addParameter("r",0,c);
+    }
+
     updateControllCycles(){
         let ref=this;
-        if(this.getBase() instanceof Polygon){
-            let points=this.getBase().getPoints();
-            points.forEachPoint(function(id,point){
-                let c=ref.getControlCycle(id);
-                ref.getBase().addParameter("cx",point.x,c);
-                ref.getBase().addParameter("cy",point.y,c);
-                ref.getBase().addParameter("r",0,c);
-            })
+        let svgShape=this.getBase().getSVGShape();
+        let bounds=svgShape.getBBox();
+
+        if(this.getBase() instanceof PremetiveShape){
+            this.assignControlCircle(bounds.x,bounds.y,0);
+            this.assignControlCircle(bounds.x,bounds.y+bounds.height/2,1);
+            this.assignControlCircle(bounds.x,bounds.y+bounds.height,2);
+            this.assignControlCircle(bounds.x+bounds.width/2,bounds.y+bounds.height,3);
+            this.assignControlCircle(bounds.x+bounds.width,bounds.y+bounds.height,4);
+            this.assignControlCircle(bounds.x+bounds.width,bounds.y+bounds.height/2,5);
+            this.assignControlCircle(bounds.x+bounds.width,bounds.y,6);
+            this.assignControlCircle(bounds.x+bounds.width/2,bounds.y,7);
         }else{
             console.log("error, can't draw point for "+this.getBase().constructor.name);
         }
+        
     }
     getControlCycle(key){
         if(this.controlCycles==undefined) this.controlCycles={};

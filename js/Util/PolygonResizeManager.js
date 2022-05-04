@@ -12,7 +12,7 @@ class PolygonResizeManager{
         let base=this.getBase();
         let id=circle.pointid;
         circle.onmouseover=function(e){
-            base.highlightBorder(true);
+            base.highlightBorder(true,true);
         }
         circle.onmousedown=function(e){
             let sx=e.clientX;
@@ -36,10 +36,10 @@ class PolygonResizeManager{
             base.isResizing(false);
             base.highlightBorder(false);
         }
-        circle.onmouseout=base.getPlane().onmouseout=function(e){
+        circle.onmouseout=function(e){
             if(circle.onmousemove==undefined){
                 base.isResizing(false);
-                base.highlightBorder(false);
+                base.highlightBorder(true,true);
             }
         }
     }

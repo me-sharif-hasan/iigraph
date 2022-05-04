@@ -37,4 +37,12 @@ class Points{
         });
         return path;
     }
+    getMinHandSize(){
+        let min=Math.pow(2,32);
+        for(let i=0;i<4;i++){
+            let dist=Math.sqrt(Math.pow(this.get(i).x-this.get((i+1)%4).x,2)+Math.pow(this.get(i).y-this.get((i+1)%4).y,2));
+            min=Math.min(dist,min);
+        }
+        return min;
+    }
 }

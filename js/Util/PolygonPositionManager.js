@@ -11,23 +11,29 @@ class PolygonPositionManager{
         shape.onmousedown=function(ed){
             let sx=ed.layerX;
             let sy=ed.layerY;
+            ref.getBase().highlightBorder(true,undefined);
             shape.onmousemove=plane.onmousemove=function(em){
                 let dx=sx-em.layerX;
                 let dy=sy-em.layerY;
                 ref.getBase().jump(dx,dy);
                 sx=em.layerX;
                 sy=em.layerY;
-                ref.getBase().highlightBorder(true);
+                ref.getBase().highlightBorder(true,undefined);
             }
         }
         plane.onmouseup=shape.onmouseup=function(e){
             shape.onmousemove=plane.onmousemove=undefined;
         }
-        shape.onmouseover=function(e) {
-            ref.getBase().highlightBorder(true);
+        shape.onmouseover=function(e){
+            ref.getBase().highlightBorder(true,undefined);
         }
-        shape.onmouseout=function(e) {
-            ref.getBase().highlightBorder(false);
+        shape.onmouseout=function(e){
+            if(!ref.getBase().isClicked())
+                ref.getBase().highlightBorder(false,undefined);
+        }
+        shape.onclick=function(e){
+            ref.getBase().isClicked(true);
+            ref.getBase().highlightBorder(true,true);
         }
     }
 

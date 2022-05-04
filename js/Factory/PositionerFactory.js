@@ -3,10 +3,11 @@ class PositionerFactory{
     constructor(shape){
         this.base=shape;
         if(shape instanceof Polygon){
-            //console.log(shape);
             this.manager=new PolygonPositionManager(shape);
-        }else if(shape instanceof Shape){
-
+        }else if(shape instanceof PremetiveShape){
+            this.manager=new PolygonPositionManager(shape);
+        }else{
+            console.log("No manager found for this shape");
         }
     }
 }
