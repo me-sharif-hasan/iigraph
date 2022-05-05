@@ -15,7 +15,7 @@ class PolygonPositionManager{
             base.highlightBorder(true,undefined);
         });
         $(base.getSVGShape()).on("mouseout",function(e){
-            if(!clicked) base.highlightBorder(false,undefined);
+            if(!clicked) base.highlightBorder(base.markSelected(),undefined);
         });
         $(base.getSVGShape()).on("mousedown",function(e){
             let sx=e.clientX;
@@ -23,7 +23,12 @@ class PolygonPositionManager{
             let movehandler=function(mx){
                 let dx=sx-mx.clientX;
                 let dy=sy-mx.clientY
-                base.move(dx,dy);
+                if(!base.markSelected()){
+                    base.move(dx,dy);
+                }
+                else{
+                    base.getSelectionMachanism().moveAllSelected(dx,dy);
+                }
                 sx=mx.clientX;
                 sy=mx.clientY;
             }
@@ -34,7 +39,7 @@ class PolygonPositionManager{
         });
         $(window).on("click",function(e){
             if(e.target.id=="canvas"){
-                base.highlightBorder(false,undefined);
+                base.highlightBorder(base.markSelected(),undefined);
                 clicked=false;
             }
         })

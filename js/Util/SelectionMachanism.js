@@ -16,19 +16,14 @@ class SelectionMachanism{
         ref.addParameter("fill","#598ab533");
         ref.addParameter("stroke","#2727db");
         ref.addParameter("stroke-dasharray",5);
-        this.canvas.onmousedown=function(e){
+        $(this.canvas).on("mousedown",function(e){
             if(e.target!=ref.canvas) return;
             ref.addParameter("stroke-width",0.5);
             let sx=e.layerX;
             let sy=e.layerY;
-            let points={
-                0:{"x":sx,"y":sy},
-                1:{"x":sx,"y":sy},
-                2:{"x":sx,"y":sy},
-                3:{"x":sx,"y":sy}
-            }
+            let points={0:{"x":sx,"y":sy},1:{"x":sx,"y":sy},2:{"x":sx,"y":sy},3:{"x":sx,"y":sy}}
             points=new Points(points);
-            ref.canvas.onmousemove=function(me){
+            let mousemovehandler=function(me){
                 let ex=me.layerX;
                 let ey=me.layerY;
                 points.set(1,{"x":sx,"y":ey});
@@ -36,46 +31,59 @@ class SelectionMachanism{
                 points.set(3,{"x":ex,"y":sy});
                 ref.addParameter("points",points.getSvgPathPoints())
             }
-        }
-        window.onmouseup=function(e){
-            ref.canvas.onmousemove=undefined;
-            let points=ref.selector.getAttribute("points");
-            if(points==null||points=="undefined") return;
-            points=points.split(" ");
-            ref.selectShapes(points[0],points[1],points[2],points[3]);
-            ref.addParameter("stroke-width",0);
-            ref.addParameter("points",undefined);
-        }
-        window.onclick=function(e){
+            $(ref.canvas).on("mousemove",mousemovehandler);
+
+            let clickCapture=function(e){
+                e.stopPropagation();
+                $(window).unbind("click",clickCapture,true);
+            }
+
+            $(ref.canvas).on("mouseup",function(e){
+                $(ref.canvas).unbind("mousemove",mousemovehandler);
+                let points=ref.selector.getAttribute("points");
+                if(points==null||points=="undefined") return;
+                points=points.split(" ");
+                let bbox=ref.selector.getBBox();
+                ref.selectShapes({
+                    0:{"x":bbox.x,"y":bbox.y},
+                    1:{"x":bbox.x,"y":bbox.y+bbox.height},
+                    2:{"x":bbox.x+bbox.width,"y":bbox.y+bbox.height},
+                    3:{"x":bbox.x+bbox.width,"y":bbox.y}
+                });
+                ref.addParameter("stroke-width",0);
+                ref.addParameter("points",undefined);
+                $(window).on("click",clickCapture,true);
+            });
+        });
+        $(window).on("click",function(e){//click on mouseup problem. somehow worked! I don't know
             if(e.target.id=="canvas"){
+                ref.selected_stack.forEach(function(shape){
+                    ref.deselect(shape.getId());
+                });
                 ref.selected_stack=[];
             }
-        }
+        });
     }
-    selectShapes(a,b,c,d){
+    selectShapes(points){
         let ref=this;
-        a=a.split(",");
-        a={"x":a[0],"y":a[1]};
-        b=b.split(",");
-        b={"x":b[0],"y":b[1]};
-        c=c.split(",");
-        c={"x":c[0],"y":c[1]};
-        d=d.split(",");
-        d={"x":d[0],"y":d[1]};
-
-        let bound=new Points({0:a,1:b,2:c,3:d});
+        let bound=new Points(points);
         this.all_elms.forEach(function(elm){
             let isContaining=bound.contains(elm.getPoints());
             if(isContaining){
-                ref.select(elm,true);
+                ref.select(elm.getId());
             }
         });
-
     }
 
-    select(obj,flag){
-        this.selected_stack[obj.getId()]=obj;
-        obj.highlightBorder(flag,undefined);
+    select(id){
+        this.selected_stack[id]=this.all_elms[id];
+        this.selected_stack[id].markSelected(true);
+        this.selected_stack[id].highlightBorder(true,undefined);
+    }
+    deselect(id){
+        this.selected_stack[id].markSelected(false);
+        this.selected_stack[id].highlightBorder(undefined,undefined);
+        this.selected_stack[id]=undefined;
     }
     createSVGDOM(customShape){
         let shape=document.createElementNS("http://www.w3.org/2000/svg", (customShape==undefined?this.shapeName:customShape));
@@ -84,9 +92,9 @@ class SelectionMachanism{
     addParameter(key,value,obj){
         (obj==undefined?this.selector:obj).setAttributeNS(null, key, value);
     }
-    jump(dx,dy){
+    moveAllSelected(dx,dy){
         this.selected_stack.forEach(function(elm){
-            elm.jump(dx,dy);
+            elm.move(dx,dy);
         });
     }
 }

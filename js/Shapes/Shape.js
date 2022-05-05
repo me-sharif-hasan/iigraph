@@ -1,6 +1,7 @@
 class Shape{
   static numObjs=0;
   onclickFunctions=[];
+  selected=false;
   constructor(canvas,shapeName){
     this.objectId=Shape.numObjs;
     Shape.numObjs++;
@@ -26,7 +27,10 @@ class Shape{
   getEventManager(){
     if(this.eventManager==undefined) this.eventManager=new EventManager(this);
   }
-
+  markSelected(flag){
+    if(flag==undefined) return this.selected;
+    this.selected=flag;
+  }
   getId(){
     return this.objectId;
   }
@@ -66,14 +70,6 @@ class Shape{
       return this.resizeManager.resizerControlCircleInit(circle);
     }else{
       console.log("No resize manager found");
-    }
-  }
-
-  select(flag){
-    if(this.selectionMachanism==undefined){
-      console.warn("No selection machanism found");
-    }else{
-      this.selectionMachanism.select(this,flag);
     }
   }
 

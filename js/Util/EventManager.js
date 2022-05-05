@@ -6,17 +6,17 @@ class EventManager{
         }
         this.dom=dom;
     }
-    on(name,fn){
+    on(name,fn,flag){
         this.dom.forEach(function(elm){
             name.split(" ").forEach(function(ename){
-                if(ename!="") elm.addEventListener(ename,fn);
+                if(ename!="") elm.addEventListener(ename,fn,flag);
             });
         });
     }
-    unbind(name,fn){
+    unbind(name,fn,flag){
         this.dom.forEach(function(elm){
             name.split(" ").forEach(function(ename){
-                if(ename!="") elm.removeEventListener(ename,fn);
+                if(ename!="") elm.removeEventListener(ename,fn,flag);
             });
         });        
     }
