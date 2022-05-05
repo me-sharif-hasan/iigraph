@@ -45,7 +45,7 @@ class PolygonBorderManager{
         if(key==undefined) return this.controlCycles;
         if(this.controlCycles[key]==undefined){
             this.controlCycles[key]=this.getBase().createSVGDOM("circle");
-            this.getBase().addParameter("pointid",key,this.controlCycles[key]);
+            this.controlCycles[key].pointid=key;
             this.getBase().addParameter("class","control-circle",this.controlCycles[key]);
             this.getBase().create(this.controlCycles[key]);
             this.getBase().resizerControlCircleInit(this.controlCycles[key]);

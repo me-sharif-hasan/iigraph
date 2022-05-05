@@ -45,4 +45,28 @@ class Points{
         }
         return min;
     }
+    contains(point){
+        let ref=this;
+        if(this.pos.length>4){
+            console.warn("Not yet implemented.");
+            return false;
+        }
+        let flag=true;
+        Object.keys(point.pos).forEach(function(key){
+            let px=point.get(key).x;
+            let py=point.get(key).y;
+            let tmp=false;
+            if(px>=ref.get(0).x&&px<=ref.get(3).x){
+                if(py>=ref.get(0).y&&py<=ref.get(1).y){
+                    if(px>=ref.get(1).x&&px<=ref.get(2).x){
+                        if(py>=ref.get(3).y&&py<=ref.get(2).y){
+                            tmp=true;
+                        }
+                    }
+                }
+            }
+            flag&=tmp;
+        });
+        return flag;
+    }
 }

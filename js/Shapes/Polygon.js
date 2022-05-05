@@ -20,7 +20,7 @@ class Polygon extends Shape{
     return this.pos;
   }
 
-  jump(dx,dy){
+  move(dx,dy){
     this.getPoints().shiftTo(dx,dy);
     this.createPoints();
   }

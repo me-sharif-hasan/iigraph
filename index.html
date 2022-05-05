@@ -7,7 +7,14 @@
   </head>
   <body>
     <div class="container">
-      <div class="shapes col-side"></div>
+      <div class="shapes col-side">
+        <div class="shape-selector">
+          <h3 class="title-3" align="center">Shapes</h3><hr>
+          <button class="shape-btn" type="rectangle">Rectangle</button><button class="shape-btn" type="triangle">Triangle</button>
+        </div>
+
+
+      </div>
       <div class="drawing col-middle">
         <div class="grid">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" id="canvas">
@@ -30,9 +37,23 @@
     <script type="text/javascript" src="js/Util/PolygonBorderManager.js"></script>
     <script type="text/javascript" src="js/Util/PolygonResizeManager.js"></script>
     <script type="text/javascript" src="js/Util/Points.js"></script>
+    <script type="text/javascript" src="js/Util/SelectionMachanism.js"></script>
+    <script type="text/javascript" src="js/Util/EventManager.js"></script>
     <script type="text/javascript">
-      let r=new Rectangle(document.getElementById("canvas"));
-      new IsoscelesTriangle(document.getElementById("canvas"));
+      let shapes=document.getElementsByClassName("shape-btn");
+      let obj_stack=[]
+      let selector=new SelectionMachanism(document.getElementById("canvas"));
+      for(let i=0;i<shapes.length;i++){
+        let elm=shapes[i];
+        elm.onclick=function(e){
+          let t=this.getAttribute("type");
+          if(t=="rectangle"){
+            obj_stack.push(new Rectangle(document.getElementById("canvas")).addSelectionMachanism(selector))
+          }else if(t=="triangle"){
+            obj_stack.push(new IsoscelesTriangle(document.getElementById("canvas")).addSelectionMachanism(selector));
+          }
+        }
+      }
     </script>
   </body>
 </html>

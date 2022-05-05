@@ -5,36 +5,39 @@ class PolygonPositionManager{
     }
 
     initEventListeners(){
-        let ref=this;
-        let shape=this.getBase().getSVGShape();
-        let plane=this.getBase().getPlane();
-        shape.onmousedown=function(ed){
-            let sx=ed.layerX;
-            let sy=ed.layerY;
-            ref.getBase().highlightBorder(true,undefined);
-            shape.onmousemove=plane.onmousemove=function(em){
-                let dx=sx-em.layerX;
-                let dy=sy-em.layerY;
-                ref.getBase().jump(dx,dy);
-                sx=em.layerX;
-                sy=em.layerY;
-                ref.getBase().highlightBorder(true,undefined);
+        let base=this.getBase();
+        let clicked=false;
+        $(base.getSVGShape()).on("click",function(e){
+            base.highlightBorder(true,undefined);
+            clicked=true;
+        });
+        $(base.getSVGShape()).on("mouseover",function(e){
+            base.highlightBorder(true,undefined);
+        });
+        $(base.getSVGShape()).on("mouseout",function(e){
+            if(!clicked) base.highlightBorder(false,undefined);
+        });
+        $(base.getSVGShape()).on("mousedown",function(e){
+            let sx=e.clientX;
+            let sy=e.clientY;
+            let movehandler=function(mx){
+                let dx=sx-mx.clientX;
+                let dy=sy-mx.clientY
+                base.move(dx,dy);
+                sx=mx.clientX;
+                sy=mx.clientY;
             }
-        }
-        plane.onmouseup=shape.onmouseup=function(e){
-            shape.onmousemove=plane.onmousemove=undefined;
-        }
-        shape.onmouseover=function(e){
-            ref.getBase().highlightBorder(true,undefined);
-        }
-        shape.onmouseout=function(e){
-            if(!ref.getBase().isClicked())
-                ref.getBase().highlightBorder(false,undefined);
-        }
-        shape.onclick=function(e){
-            ref.getBase().isClicked(true);
-            ref.getBase().highlightBorder(true,true);
-        }
+            $([base.getSVGShape(),base.getPlane()]).on("mousemove",movehandler);
+            $([base.getSVGShape(),base.getPlane()]).on("mouseup",function(e){
+                $([base.getSVGShape(),base.getPlane()]).unbind("mousemove",movehandler);
+            })
+        });
+        $(window).on("click",function(e){
+            if(e.target.id=="canvas"){
+                base.highlightBorder(false,undefined);
+                clicked=false;
+            }
+        })
     }
 
     getBase(){

@@ -1,5 +1,9 @@
 class Shape{
+  static numObjs=0;
+  onclickFunctions=[];
   constructor(canvas,shapeName){
+    this.objectId=Shape.numObjs;
+    Shape.numObjs++;
     this.base=canvas;
     this.shapeName=shapeName;
     this.resizing=false;
@@ -18,6 +22,14 @@ class Shape{
     this.borderManager=new BorderManagerFactory(this);
     this.resizeManager=new ResizerFactory(this); //have to call after border creation
   }
+
+  getEventManager(){
+    if(this.eventManager==undefined) this.eventManager=new EventManager(this);
+  }
+
+  getId(){
+    return this.objectId;
+  }
   isClicked(flag){
     if(flag!=undefined) this.clicked=flag;
     return this.clicked;
@@ -34,14 +46,17 @@ class Shape{
   getPlane(){
     return this.base;
   }
+  getSelectionMachanism(){
+    return this.selectionMachanism;
+  }
 /* Handles manager calles instead of directly calling them*/
   isResizing(flag){
     if(flag!=undefined) this.resizing=flag;
     return this.resizing;
   }
-  highlightBorder(flag,border,circles){
+  highlightBorder(border,circles){
     if(this.borderManager!=undefined){
-      this.borderManager.highlightBorder(flag,border,circles);
+      this.borderManager.highlightBorder(border,circles);
     }else{
       console.log("No border manager found");
     }
@@ -52,6 +67,24 @@ class Shape{
     }else{
       console.log("No resize manager found");
     }
+  }
+
+  select(flag){
+    if(this.selectionMachanism==undefined){
+      console.warn("No selection machanism found");
+    }else{
+      this.selectionMachanism.select(this,flag);
+    }
+  }
+
+  addSelectionMachanism(selector){
+    if(selector instanceof SelectionMachanism){
+      this.selectionMachanism=selector;
+      selector.addShapeToList(this);
+    }else{
+      console.warn("Wrong selector machanism");
+    }
+    return this;
   }
 
   initDefault(){
