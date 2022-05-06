@@ -58,6 +58,7 @@ class SelectionMachanism{
         $(window).on("click",function(e){//click on mouseup problem. somehow worked! I don't know
             if(e.target.id=="canvas"){
                 ref.selected_stack.forEach(function(shape){
+                    if(shape!=undefined)
                     ref.deselect(shape.getId());
                 });
                 ref.selected_stack=[];
@@ -65,14 +66,21 @@ class SelectionMachanism{
         });
     }
     selectShapes(points){
+        let selected=false;
         let ref=this;
+        this.selected_stack.forEach(function(elm){
+            if(elm!=undefined)
+            ref.deselect(elm.getId());
+        });
         let bound=new Points(points);
         this.all_elms.forEach(function(elm){
             let isContaining=bound.contains(elm.getPoints());
             if(isContaining){
                 ref.select(elm.getId());
+                selected=true;
             }
         });
+        if(selected) this.execute("dragnselect");
     }
 
     select(id){
@@ -81,9 +89,26 @@ class SelectionMachanism{
         this.selected_stack[id].highlightBorder(true,undefined);
     }
     deselect(id){
+        if(this.selected_stack[id]==undefined) return;
         this.selected_stack[id].markSelected(false);
-        this.selected_stack[id].highlightBorder(undefined,undefined);
+        this.selected_stack[id].highlightBorder(false,false);
         this.selected_stack[id]=undefined;
+    }
+    deselectExcept(id){
+        let ref=this;
+        this.selected_stack.forEach(function(elm){
+            if(elm==undefined) return;
+            if(elm.getId()!=id)
+            ref.deselect(elm.getId());
+        });
+    }
+    selectExcept(id){
+        let ref=this;
+        this.selected_stack.forEach(function(elm){
+            if(elm==undefined) return;
+            if(elm.getId()!=id)
+            ref.select(elm.getId());
+        });
     }
     createSVGDOM(customShape){
         let shape=document.createElementNS("http://www.w3.org/2000/svg", (customShape==undefined?this.shapeName:customShape));
@@ -94,7 +119,23 @@ class SelectionMachanism{
     }
     moveAllSelected(dx,dy){
         this.selected_stack.forEach(function(elm){
+            if(elm!=undefined)
             elm.move(dx,dy);
         });
     }
+    execute(name){
+        let ref=this;
+        if(this.eventlist!=undefined&&this.eventlist[name]!=undefined){
+            let selectEvents=this.eventlist[name];
+            selectEvents.forEach(function(f){
+              f(ref.selected_stack.filter(function(x){return x!=undefined;}));
+            });
+          }
+    }
+
+    addEventListener(name,fn,flag){
+        if(this.eventlist==undefined) this.eventlist=[];
+        if(this.eventlist[name]==undefined) this.eventlist[name]=[];
+        this.eventlist[name].push(fn);
+      }
 }

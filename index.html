@@ -43,17 +43,29 @@
       let shapes=document.getElementsByClassName("shape-btn");
       let obj_stack=[]
       let selector=new SelectionMachanism(document.getElementById("canvas"));
+      $(selector).on("dragnselect",function(shapes){
+        console.log(shapes);
+      });
       for(let i=0;i<shapes.length;i++){
         let elm=shapes[i];
         elm.onclick=function(e){
           let t=this.getAttribute("type");
           if(t=="rectangle"){
-            obj_stack.push(new Rectangle(document.getElementById("canvas")).addSelectionMachanism(selector))
+            let obj=new Rectangle(document.getElementById("canvas")).addSelectionMachanism(selector);
+            $(obj).on("select",function(e,selected){
+              //alert(selected);
+            });
+            obj_stack.push(obj);
           }else if(t=="triangle"){
             obj_stack.push(new IsoscelesTriangle(document.getElementById("canvas")).addSelectionMachanism(selector));
           }
         }
       }
+      setInterval(function(e){
+        obj_stack.forEach(function(elm){
+         // console.log(elm.markSelected());
+        });
+      },1000)
     </script>
   </body>
 </html>

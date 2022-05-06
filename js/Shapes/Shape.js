@@ -30,6 +30,12 @@ class Shape{
   markSelected(flag){
     if(flag==undefined) return this.selected;
     this.selected=flag;
+    if(this.eventlist!=undefined&&this.eventlist["select"]!=undefined){
+      let selectEvents=this.eventlist["select"];
+      selectEvents.forEach(function(f){
+        f(this,flag);
+      });
+    }
   }
   getId(){
     return this.objectId;
@@ -100,5 +106,10 @@ class Shape{
     if(this.shape.hasAttribute(key)){
       this.shape.setAttributeNS(null, key, value);
     }
+  }
+  addEventListener(name,fn,flag){
+    if(this.eventlist==undefined) this.eventlist=[];
+    if(this.eventlist[name]==undefined) this.eventlist[name]=[];
+    this.eventlist[name].push(fn);
   }
 }
