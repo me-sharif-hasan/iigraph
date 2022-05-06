@@ -8,7 +8,7 @@ class PolygonPositionManager{
         let base=this.getBase();
         let clicked=false;
         $(base.getSVGShape()).on("click",function(e){
-            base.highlightBorder(true,undefined);
+            base.getSelectionMachanism().select(base.getId());
             clicked=true;
         });
         $(base.getSVGShape()).on("mouseover",function(e){
