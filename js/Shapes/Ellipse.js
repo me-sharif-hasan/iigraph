@@ -2,10 +2,11 @@ class Ellipse extends Shape{
     pos=undefined
     constructor(canvas){
       super(canvas,"ellipse");
-      this.createEllipse();
+      this.createEllipse(true);
     }
-    createEllipse(){
-        let rand=Math.floor(Math.random()*30)+1;
+    createEllipse(randC){
+        if(randC){
+        let rand=undefined?Math.floor(Math.random()*30)+1:0;
         let cx=this.canvasWidth/2-this.canvasWidth*30/100/2+rand;
         let cy=this.canvasHeight/2-this.canvasWidth*20/100/2+rand;
         let rx=this.canvasWidth*30/100;
@@ -14,7 +15,8 @@ class Ellipse extends Shape{
         this.cyy=cy;
         this.rxx=rx;
         this.ryy=ry;
-        this.createPoints({0:{"x":cx-rx,"y":cy},1:{"x":cx,"y":cy+ry},2:{"x":cx+rx,"y":cy},3:{"x":cx,"y":cy-ry}});
+        }
+        this.createPoints({0:{"x":this.cxx-this.rxx,"y":this.cyy},1:{"x":this.cxx,"y":this.cyy+this.ryy},2:{"x":this.cxx+this.rxx,"y":this.cyy},3:{"x":this.cxx,"y":this.cyy-this.ryy}});
     }
     createPoints(points){
       if(points!=undefined){
@@ -43,7 +45,7 @@ class Ellipse extends Shape{
     doResize(dx,dy){
         this.rxx-=dx;
         this.ryy-=dy;
-        this.createPoints();
+        this.createEllipse(false);
     }
   }
   
