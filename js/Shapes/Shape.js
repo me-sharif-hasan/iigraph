@@ -100,6 +100,7 @@ class Shape{
     return shape;
   }
   addParameter(key,value,obj){
+    console.log(key,value);
     (obj==undefined?this.shape:obj).setAttributeNS(null, key, value);
   }
   updateParameter(key,value){

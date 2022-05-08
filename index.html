@@ -28,6 +28,7 @@
     <script type="text/javascript" src="js/Shapes/Polygon.js"></script>
     <script type="text/javascript" src="js/Shapes/Rectangle.js"></script>
     <script type="text/javascript" src="js/Shapes/IsoscelesTriangle.js"></script>
+    <script type="text/javascript" src="js/Shapes/Ellipse.js"></script>
 
     <script type="text/javascript" src="js/Factory/PositionerFactory.js"></script>
     <script type="text/javascript" src="js/Factory/BorderManagerFactory.js"></script>
@@ -61,6 +62,7 @@
           }
         }
       }
+      new Ellipse(document.getElementById("canvas")).addSelectionMachanism(selector);
       setInterval(function(e){
         obj_stack.forEach(function(elm){
          // console.log(elm.markSelected());

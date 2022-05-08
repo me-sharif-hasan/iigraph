@@ -2,8 +2,8 @@ class BorderManagerFactory{
     constructor(shape){
         if(shape instanceof Polygon){
             this.manager=new PolygonBorderManager(shape);
-        }else if(shape instanceof PremetiveShape){
-            this.manager=new PremetiveShapeBorderManager(shape);
+        }else if(shape instanceof Ellipse){
+            this.manager=new PolygonBorderManager(shape);
         }else{
             console.warn("No bordermagaer for your shape!");
         }

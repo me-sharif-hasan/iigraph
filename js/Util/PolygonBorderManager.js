@@ -28,8 +28,9 @@ class PolygonBorderManager{
 
     updateControllCycles(){
         let ref=this;
-        if(this.getBase() instanceof Polygon){
+        if(this.getBase() instanceof Polygon||this.getBase() instanceof Ellipse){
             let points=this.getBase().getPoints();
+            console.log(points);
             points.forEachPoint(function(id,point){
                 let c=ref.getControlCycle(id);
                 ref.getBase().addParameter("cx",point.x,c);

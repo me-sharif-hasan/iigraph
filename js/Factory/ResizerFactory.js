@@ -2,7 +2,7 @@ class ResizerFactory{
     constructor(shape){
         if(shape instanceof Polygon){
             this.manager=new PolygonResizeManager(shape);
-        }else if(shape instanceof PremetiveShape){
+        }else if(shape instanceof Ellipse){
             this.manager=new PolygonResizeManager(shape);
         }else{
             console.warn(shape.constructor.name+" has no reisize manager");
