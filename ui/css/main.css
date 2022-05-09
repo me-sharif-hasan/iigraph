@@ -130,3 +130,8 @@ body{
 .drop .toggler:checked~.title::before{
     transform: rotate(90deg);
 }
+
+.shape-icon{
+    height: 40px;
+    width: 40px;
+}
