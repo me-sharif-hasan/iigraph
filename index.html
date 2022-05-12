@@ -1,73 +1,68 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>iigraph - keyframing video editor for digram</title>
-    <link rel="stylesheet" href="/css/main.css">
-  </head>
-  <body>
+<html>
+    <head>
+        <title>iigraph-A visual flowchart editor and animator</title>
+        <link rel="stylesheet" href="ui/css/main.css">
+    </head>
+    <body>
     <div class="container">
-      <div class="shapes col-side">
-        <div class="shape-selector">
-          <h3 class="title-3" align="center">Shapes</h3><hr>
-          <button class="shape-btn" type="rectangle">Rectangle</button><button class="shape-btn" type="triangle">Triangle</button>
+        <div class="header">
+            <div class="logo">
+                <img src="logo.svg"/>
+            </div>
+        <div class="navigation">
+            <div class="title">
+                <h3>iigraph</h3>
+            </div>
+            <ul>
+                <li>File</li>
+                <li>Edit</li>
+                <li>View</li>
+                <li>Preference</li>
+                <li>Help</li>
+            </ul>
         </div>
-
-
-      </div>
-      <div class="drawing col-middle">
-        <div class="grid">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" id="canvas">
-          </svg>
         </div>
-      </div>
-      <div class="attributes col-side"></div>
+        <div class="left-sidebar">
+            <div class="drop">
+                <input type="checkbox" class="hidden toggler" id="general-switch">
+                <label for="general-switch" class="title">General</label>
+                <div class="holder">
+                    <input type="image" name="circle" src="ui/icons/circle.svg" class="shape-icon"/>
+                    <input type="image" name="circle" src="ui/icons/iso-triange.svg" class="shape-icon"/>
+                    <input type="image" name="circle" src="ui/icons/square.svg" class="shape-icon"/>
+                    <input type="image" name="circle" src="ui/icons/90deg-triangle.svg" class="shape-icon"/>
+                    <input type="image" name="circle" src="ui/icons/rect.svg" class="shape-icon"/>
+                </div>
+            </div>
+
+            <div class="drop">
+                <input type="checkbox" class="hidden toggler" id="misc-switch">
+                <label for="misc-switch" class="title">Misc</label>
+                <div class="holder">
+                    <input type="image" name="circle" src="ui/icons/heart.svg" class="shape-icon"/>
+                    <input type="image" name="circle" src="ui/icons/cloud.svg" class="shape-icon"/>
+                    <input type="image" name="circle" src="ui/icons/actor.svg" class="shape-icon"/>
+                </div>
+            </div>
+
+        </div>
+        <div class="drawing-area">
+            <svg style="width: 100%;height: 100%;" id="canvas">
+            </svg>          
+        </div>
+        <div class="right-sidebar">
+
+        </div>
     </div>
-
-    <script type="text/javascript" src="js/Shapes/Shape.js"></script>
-    <script type="text/javascript" src="js/Shapes/Polygon.js"></script>
-    <script type="text/javascript" src="js/Shapes/Rectangle.js"></script>
-    <script type="text/javascript" src="js/Shapes/IsoscelesTriangle.js"></script>
-    <script type="text/javascript" src="js/Shapes/Ellipse.js"></script>
-
-    <script type="text/javascript" src="js/Factory/PositionerFactory.js"></script>
-    <script type="text/javascript" src="js/Factory/BorderManagerFactory.js"></script>
-    <script type="text/javascript" src="js/Factory/ResizerFactory.js"></script>
-
-    <script type="text/javascript" src="js/Util/PolygonPositionManager.js"></script>
-    <script type="text/javascript" src="js/Util/PolygonBorderManager.js"></script>
-    <script type="text/javascript" src="js/Util/PolygonResizeManager.js"></script>
-    <script type="text/javascript" src="js/Util/Points.js"></script>
-    <script type="text/javascript" src="js/Util/SelectionMachanism.js"></script>
-    <script type="text/javascript" src="js/Util/EventManager.js"></script>
-    <script type="text/javascript">
-      let shapes=document.getElementsByClassName("shape-btn");
-      let obj_stack=[]
-      let selector=new SelectionMachanism(document.getElementById("canvas"));
-      $(selector).on("dragnselect",function(shapes){
-        console.log(shapes);
-      });
-      for(let i=0;i<shapes.length;i++){
-        let elm=shapes[i];
-        elm.onclick=function(e){
-          let t=this.getAttribute("type");
-          if(t=="rectangle"){
-            let obj=new Rectangle(document.getElementById("canvas")).addSelectionMachanism(selector);
-            $(obj).on("select",function(e,selected){
-              //alert(selected);
-            });
-            obj_stack.push(obj);
-          }else if(t=="triangle"){
-            obj_stack.push(new IsoscelesTriangle(document.getElementById("canvas")).addSelectionMachanism(selector));
-          }
-        }
-      }
-      new Ellipse(document.getElementById("canvas")).addSelectionMachanism(selector);
-      setInterval(function(e){
-        obj_stack.forEach(function(elm){
-         // console.log(elm.markSelected());
-        });
-      },1000)
+    <script type="text/javascript" src="src/lib/Path.js"></script>
+    <script type="text/javascript" src="src/lib/Shapes/Circle.js"></script>
+    <script type="text/javascript" src="src/lib/Shapes/Heart.js"></script>
+    <script type="text/javascript" src="src/lib/Adapters/ScaleAdapter.js"></script>
+    <script type="text/javascript" src="src/lib/MouseActionManager/iimice.js"></script>
+    <script>
+        new Circle(document.getElementById("canvas"));
+        new Heart(document.getElementById("canvas"));
     </script>
-  </body>
+    </body>
 </html>

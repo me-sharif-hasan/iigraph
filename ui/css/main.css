@@ -1,0 +1,162 @@
+:root{
+    --sidebar_width: 17%;
+    --navigationbar_height: 54px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+@keyframes grow {
+    from{
+        max-height: 0px;
+    }
+    to{
+        max-height: 500px;
+    }
+}
+@keyframes fold{
+    from{
+        max-height: 500px;
+    }
+    to{
+        max-height: 0px;
+    }
+}
+
+body{
+    margin: 0 auto;
+}
+.hidden{
+    display: none;
+}
+.container{
+    position: relative;
+    box-sizing: border-box;
+    background: #fff;
+    height: 100vh;
+}
+.left-sidebar{
+    position: absolute;
+    left: 0;
+    top: var(--navigationbar_height);
+    width: var(--sidebar_width);
+    height: calc(100% - var(--navigationbar_height));
+}
+.drawing-area{
+    position: absolute;
+    left: var(--sidebar_width);
+    top: var(--navigationbar_height);
+    width: calc(100% - 2*var(--sidebar_width));
+    height: calc(100% - var(--navigationbar_height));  
+}
+.right-sidebar{
+    position: absolute;
+    right: 0;
+    top: var(--navigationbar_height);
+    width: var(--sidebar_width);
+    height: calc(100% - var(--navigationbar_height));
+}
+.header{
+    display: inline-flex;
+}
+.navigation .title h3{
+    margin: 0;
+    font-weight: normal;
+    cursor: default;
+    user-select: none;
+}
+.navigation{
+    padding: 5px 3px 3px 12px;
+}
+.navigation ul{
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.navigation ul li{
+    padding: 8px;
+    padding: 3px 5px 2px 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: .3s;
+}
+.navigation ul li:hover{
+    background: #eee;
+}
+.navigation ul li:hover::first-letter{
+    text-decoration: underline;
+}
+.logo{
+    width: 50px;
+    height: 50px;
+}
+.logo img{
+    width: 100%;
+    height: 100%;
+}
+
+.drop .title{
+    padding: 5px 4px 5px 5px;
+    cursor: pointer;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin: 3px 0 0 0;
+    display: block;
+    user-select: none;
+}
+.drop .title::before{
+    content: "";
+    border-left: 9px solid black;
+    border-bottom: 6px solid transparent;
+    border-top: 6px solid transparent;
+    display: block;
+    float: left;
+    margin: 3px 5px 0 0;
+    transition: .5s;
+}
+.drop .holder{
+     overflow-y: scroll;
+     padding: 10px 2px 0 2px;
+}
+.drop .toggler:not(:checked)~.holder{
+    animation-fill-mode: forwards;
+    animation-name: fold;
+    animation-duration: 0.2s;
+}
+.drop .toggler:checked~.holder{
+    animation-name: grow;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    overflow-y: scroll;
+}
+.drop .toggler:checked~.title::before{
+    transform: rotate(90deg);
+}
+
+.shape-icon{
+    height: 40px;
+    width: 40px;
+}
+
+
+/*SVG tranform handles*/
+@keyframes handleLineAnim{
+    to{
+        stroke-dashoffset: 0;
+    }
+    from{
+        stroke-dashoffset:10.5;
+    }
+}
+.handle-lines{
+fill: none;
+stroke: #000;
+stroke-dasharray: 5;
+stroke-linecap: round;
+stroke-width: 0.7;
+animation-name: handleLineAnim;
+animation-duration: .2s;
+animation-iteration-count: infinite;
+}
+.handle-circle:hover,.handle-circle-hover{
+    fill: blue;
+    r:7px;
+}
