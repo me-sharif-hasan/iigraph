@@ -48,11 +48,19 @@
 
         </div>
         <div class="drawing-area">
-            
+            <svg style="width: 100%;height: 100%;" id="canvas">
+            </svg>          
         </div>
         <div class="right-sidebar">
 
         </div>
     </div>
+    <script type="text/javascript" src="src/lib/Path.js"></script>
+    <script type="text/javascript" src="src/lib/Shapes/Circle.js"></script>
+    <script type="text/javascript" src="src/lib/Adapters/ScaleAdapter.js"></script>
+    <script type="text/javascript" src="src/lib/MouseActionManager/iimice.js"></script>
+    <script>
+        new Circle(document.getElementById("canvas"));
+    </script>
     </body>
 </html>
