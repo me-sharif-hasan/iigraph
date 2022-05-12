@@ -135,3 +135,28 @@ body{
     height: 40px;
     width: 40px;
 }
+
+
+/*SVG tranform handles*/
+@keyframes handleLineAnim{
+    to{
+        stroke-dashoffset: 0;
+    }
+    from{
+        stroke-dashoffset:10.5;
+    }
+}
+.handle-lines{
+fill: none;
+stroke: #000;
+stroke-dasharray: 5;
+stroke-linecap: round;
+stroke-width: 0.7;
+animation-name: handleLineAnim;
+animation-duration: .2s;
+animation-iteration-count: infinite;
+}
+.handle-circle:hover,.handle-circle-hover{
+    fill: blue;
+    r:7px;
+}

@@ -64,7 +64,6 @@ class iimise{
      * @param {Function(event)} functionName - Handler function.
      */
     manageDragEvent(functionName){
-        console.log("Drag event handler");
         let ref=this;
         this.d_MouseDownHandler=function(mousedownevent){
             let dragEvent={};
