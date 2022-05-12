@@ -47,21 +47,40 @@ class ScaleAdapter{
             if(id<8) handle["circles"].push(ref.createHandleCircle(p[0],p[1],id++));
             d+="L "+p[0]+" "+p[1]+" ";
         });
-        let lines=this.base.createSVGElement("path");
+        let lines=null;
+        if(this.handles["lines"]==undefined){
+            lines=this.base.createSVGElement("path");
+            this.handles["lines"]=lines;
+        }
+        else{
+            lines=this.handles["lines"];
+        }
         this.base.addParameter("d",d,lines);
         this.base.addParameter("class","handle-lines",lines);
         handle["lines"]=lines;
         this.base.addHandles(handle);
     }
     createHandleCircle(cx,cy,id){
-        let circle=this.base.createSVGElement("circle");
+        if(this.handles==undefined){
+            this.handles={};
+        }
+        if(this.handles["circles"]==undefined){
+            this.handles["circles"]=[];
+        }
+        let circle=null;
+        if(this.handles["circles"][id]!=undefined){
+            circle=this.handles["circles"][id];
+        }else{
+            circle=this.base.createSVGElement("circle");
+            this.handles["circles"][id]=circle;
+        }
         this.base.addParameter("cx",cx,circle);
         this.base.addParameter("cy",cy,circle);
         this.base.addParameter("r",4,circle);
         this.base.addParameter("class","handle-circle",circle);
         this.base.addParameter("data-handleid",id,circle);  
         this.base.addParameter("style","cursor:"+this.cursorDecider(id)+";",circle);
-        $(circle).on("drag",this.scaler);
+        $(circle).on("drag",this.scaler,undefined,{"ref":this});
         return circle;
     }
     cursorDecider(id){
@@ -96,13 +115,28 @@ class ScaleAdapter{
         return cursor;
     }
     scaler(e){
+        let ref=e.data.ref;
         let id=e.mouseDown.target.getAttribute("data-handleid");
-        let cursor=e.mouseDown.target.style.cursor;
+        let cursor=ref.cursorDecider(id);
         document.body.style.cursor=cursor;
-        e.mouseDown.target.setAttributeNS(null,"class","handle-circle-hover");
+        ref.base.addParameter("class","handle-circle-hover",e.mouseDown.target);
+        
+        if(ref.prev==undefined){
+            ref.prev={};
+            ref.prev["x"]=e.mouseDown.layerX;
+            ref.prev["y"]=e.mouseDown.layerY;
+        }
+
+        ref.base.scaleAll(e.mouseMove.layerX-ref.prev["x"],e.mouseMove.layerY-ref.prev["y"],id);
+
+        ref.prev["x"]=e.mouseMove.layerX;
+        ref.prev["y"]=e.mouseMove.layerY;
+
+
         if(e.mouseUp!=undefined){
             document.body.style.cursor="default";
             e.mouseDown.target.setAttributeNS(null,"class","handle-circle");
+            ref.prev=undefined;
         }
     }
 }

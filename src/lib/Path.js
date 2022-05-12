@@ -42,7 +42,7 @@ class Path{
      * @param {SVGElement} element SVG element. If undefined then path itself will be considered.
      */
     addParameter(parameterName,parameterValue,element){
-        (element==undefined?this.path:element).setAttributeNS(null, parameterName, parameterValue);
+        (element==undefined?this.group:element).setAttributeNS(null, parameterName, parameterValue);
     }
     
     /**
@@ -51,7 +51,7 @@ class Path{
     */
     
     updatePath(path){
-        this.addParameter("d",path);
+        this.addParameter("d",path,this.path);
     }
     addScaleAdapter(){
         this.scaleAdapter=new ScaleAdapter(this.getHookerElement(),this);
@@ -66,7 +66,10 @@ class Path{
 
     /* SVG related methods*/
     fill(color){
-        this.addParameter("fill",color);
+        this.addParameter("fill",color,this.path);
+    }
+    scaleAll(dx,dy,id){
+        console.log(dx,dy);
     }
 
 }

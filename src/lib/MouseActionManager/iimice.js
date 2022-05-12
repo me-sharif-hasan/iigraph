@@ -6,9 +6,10 @@ class iimise{
      * Will set a event listener
      * @param {string/ string[]} eventName Name of the event(s).
      * @param {Function(event)/Function(event)[]} functionName The handler function(s).
+     * @param {Function(event)/Function(event)[]} data which will pass to the function(s).
      * @param {boolean} flag Flag
      */
-    on(eventName,functionName,flag){
+    on(eventName,functionName,flag,data){
         if(Array.isArray(eventName)){
             if(Array.isArray(functionName)){
                 if(eventName.length!=functionName.length){
@@ -16,20 +17,20 @@ class iimise{
                     return;
                 }else{
                     for(let i=0;i<eventName.length;i++){
-                        this.on(eventName[i],functionName[i]);
+                        this.on(eventName[i],functionName[i],flag,data);
                     }
                 }
             }else{
                 for(let i=0;i<eventName.length;i++){
-                    this.on(eventName[i],functionName);
+                    this.on(eventName[i],functionName,flag,data);
                 }            
             }
             return;
         }
         if(eventName=="drag"){
-            this.manageDragEvent(functionName);
+            this.manageDragEvent(functionName,data);
         }else{
-            this.element.addEventListener(eventName,functionName,flag);
+            this.element.addEventListener(eventName,functionName,flag,data);
         }
     }
 
@@ -63,10 +64,11 @@ class iimise{
      * This function will manage the drag event
      * @param {Function(event)} functionName - Handler function.
      */
-    manageDragEvent(functionName){
+    manageDragEvent(functionName,data){
         let ref=this;
         this.d_MouseDownHandler=function(mousedownevent){
             let dragEvent={};
+            dragEvent["data"]=data;
             dragEvent["mouseDown"]=mousedownevent;
             let moved=false;
             let d_MouseMoveHandler=function(mousemoveevent){
