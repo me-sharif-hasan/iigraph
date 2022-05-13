@@ -10,28 +10,9 @@ class iimise{
      * @param {boolean} flag Flag
      */
     on(eventName,functionName,flag,data){
-        if(Array.isArray(eventName)){
-            if(Array.isArray(functionName)){
-                if(eventName.length!=functionName.length){
-                    console.error("Event name array and function array sould be equal in size");
-                    return;
-                }else{
-                    for(let i=0;i<eventName.length;i++){
-                        this.on(eventName[i],functionName[i],flag,data);
-                    }
-                }
-            }else{
-                for(let i=0;i<eventName.length;i++){
-                    this.on(eventName[i],functionName,flag,data);
-                }            
-            }
-            return;
-        }
-        if(eventName=="drag"){
-            this.manageDragEvent(functionName,data);
-        }else{
-            this.element.addEventListener(eventName,functionName,flag,data);
-        }
+        if(eventName=="drag") this.createDragEvent(functionName,flag,data);
+        this.element.addEventListener(eventName,functionName,flag);
+        return this;
     }
 
     /**
@@ -41,64 +22,52 @@ class iimise{
      * @param {boolean} flag Flag
      */
     unset(eventName,functionName,flag){
-        if(Array.isArray(eventName)){
-            if(Array.isArray(functionName)){
-                if(eventName.length!=functionName.length){
-                    console.error("Event name array and function array sould be equal in size");
-                    return;
-                }else{
-                    for(let i=0;i<eventName.length;i++){
-                        this.unset(eventName[i],functionName[i]);
-                    }
-                }
-            }else{
-                for(let i=0;i<eventName.length;i++){
-                    this.unset(eventName[i],functionName);
-                }            
-            }
-            return;
-        }
         this.element.removeEventListener(eventName,functionName,flag);
+        return this;
     }
-    /**
-     * This function will manage the drag event
-     * @param {Function(event)} functionName - Handler function.
-     */
-    manageDragEvent(functionName,data){
-        let ref=this;
-        this.d_MouseDownHandler=function(mousedownevent){
-            let dragEvent={};
-            dragEvent["data"]=data;
-            dragEvent["mouseDown"]=mousedownevent;
-            let moved=false;
-            let d_MouseMoveHandler=function(mousemoveevent){
-                dragEvent["mouseMove"]=mousemoveevent;
-                functionName(dragEvent);
-                moved=true;
-            }
-            ref.on("mousemove",d_MouseMoveHandler);
-            $(window).on("mousemove",d_MouseMoveHandler);
-
-            let d_MouseUpHandler=function(mouseupevent){
-                if(moved){
-                    ref.captureClick(window);
-                    dragEvent["mouseUp"]=mouseupevent;
-                    functionName(dragEvent);
-                }
-                ref.unset("mousemove",d_MouseMoveHandler);
-                $(window).unset(["mouseup","mousemove"],[d_MouseUpHandler,d_MouseMoveHandler]);
-            }
-            $(window).on("mouseup",d_MouseUpHandler);
-        }
-        this.on("mousedown",this.d_MouseDownHandler);
-    }
-
     captureClick(elm){
         let clickCapture=function(e){
             e.stopPropagation();
             $(elm).unset("click",clickCapture,true);
         }
         $(elm).on("click",clickCapture,true);
+    }
+/**
+ * 
+ * @param {Function} functionName The callback function.
+ * @param {boolean} flag Flag.
+ * @param {*} data Data that will passed to the even variable.
+ */
+    createDragEvent(functionName,flag,data){
+        let ref=this;
+        this.on("mousedown",function(mousedown){
+            let dragEvent={};
+            dragEvent["mousedown"]=mousedown;
+            dragEvent["dragstart"]={"x":mousedown.clientX,"y":mousedown.clientY};
+            dragEvent["difference"]={"dx":0,"dy":0};
+            dragEvent["data"]=data;
+
+            let sx=mousedown.clientX;
+            let sy=mousedown.clientY;
+            let mouseMoveHandler=function(mousemove){
+                dragEvent["difference"]={"x":sx-mousemove.clientX,"y":sy-mousemove.clientY};
+                sx=mousemove.clientX;
+                sy=mousemove.clientY;
+                dragEvent["mousemove"]=mousemove;
+                functionName(dragEvent);
+            }
+            let wmv = $(window).on("mousemove",mouseMoveHandler,flag);
+            let mouseUpHandler=function(mouseup){
+                ref.captureClick(window);
+                wmv.unset("mousemove",mouseMoveHandler,flag);
+                wmv.unset("mouseup",mouseUpHandler,flag);
+                dragEvent["mouseup"]=mouseup;
+                functionName(dragEvent);
+            }
+
+            wmv.on("mouseup",mouseUpHandler,flag);
+
+        })
     }
 }
 /**

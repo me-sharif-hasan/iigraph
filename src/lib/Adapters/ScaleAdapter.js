@@ -18,14 +18,15 @@ class ScaleAdapter{
                 ref.base.removeHandles();
             }
         });
-        $(this.element).on("drag",function(e){
-            //console.log(e);
-        });
+    }
+
+    getBBox(){
+        return this.element.getBBox();
     }
 
     showHandles(){
         let ref=this;
-        let bbox=this.element.getBBox();
+        let bbox=this.getBBox();
         let x=bbox.x,y=bbox.y,w=bbox.width,h=bbox.height;
         let points=[];
         points.push([x,y]);
@@ -73,6 +74,7 @@ class ScaleAdapter{
         }else{
             circle=this.base.createSVGElement("circle");
             this.handles["circles"][id]=circle;
+            $(circle).on("drag",this.dragHandler,false,this);
         }
         this.base.addParameter("cx",cx,circle);
         this.base.addParameter("cy",cy,circle);
@@ -80,9 +82,42 @@ class ScaleAdapter{
         this.base.addParameter("class","handle-circle",circle);
         this.base.addParameter("data-handleid",id,circle);  
         this.base.addParameter("style","cursor:"+this.cursorDecider(id)+";",circle);
-        $(circle).on("drag",this.scaler,undefined,{"ref":this});
         return circle;
     }
+
+    dragHandler(e){
+        let handle=e.mousedown.target.getAttribute("data-handleid");
+        let sx=e.difference.x;
+        let sy=e.difference.y;
+        switch(handle){
+            case "0":
+                e.data.base.scaleAll(-sx,-sy,handle);
+            break;
+            case "1":
+                e.data.base.scaleAll(-sx,0,handle);
+            break;
+            case "2":
+                e.data.base.scaleAll(-sx,sy,handle);
+            break;
+            case "3":
+                e.data.base.scaleAll(0,sy,handle);
+            break;
+            case "4":
+                e.data.base.scaleAll(sx,sy,handle);
+            break;
+            case "5":
+                e.data.base.scaleAll(sx,0,handle);
+            break;
+            case "6":
+                e.data.base.scaleAll(sx,-sy,handle);
+            break;
+            case "7":
+                e.data.base.scaleAll(0,-sy,handle);
+            break;
+        }
+        e.data.showHandles();
+    }
+
     cursorDecider(id){
         let cursor="resize";
         switch(id){
@@ -113,30 +148,5 @@ class ScaleAdapter{
         }
         cursor+="-resize";
         return cursor;
-    }
-    scaler(e){
-        let ref=e.data.ref;
-        let id=e.mouseDown.target.getAttribute("data-handleid");
-        let cursor=ref.cursorDecider(id);
-        document.body.style.cursor=cursor;
-        ref.base.addParameter("class","handle-circle-hover",e.mouseDown.target);
-        
-        if(ref.prev==undefined){
-            ref.prev={};
-            ref.prev["x"]=e.mouseDown.layerX;
-            ref.prev["y"]=e.mouseDown.layerY;
-        }
-
-        ref.base.scaleAll(e.mouseMove.layerX-ref.prev["x"],e.mouseMove.layerY-ref.prev["y"],id);
-
-        ref.prev["x"]=e.mouseMove.layerX;
-        ref.prev["y"]=e.mouseMove.layerY;
-
-
-        if(e.mouseUp!=undefined){
-            document.body.style.cursor="default";
-            e.mouseDown.target.setAttributeNS(null,"class","handle-circle");
-            ref.prev=undefined;
-        }
     }
 }
