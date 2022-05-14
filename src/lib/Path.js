@@ -94,8 +94,6 @@ class Path{
         this.addParameter("stroke-width",width,this.path);
     }
     scaleAll(dx,dy,handle){
-        if(handle=="0"||handle=="2") dy=dx;
-        else if(handle=="4"||handle=="6") dx=dy;
         let d=this.path.getAttribute("d");
         let segs=parse(d);
         if(segs==false){
@@ -175,29 +173,29 @@ class Path{
         this.updatePath(pathData);
     }
     moveAll(dx,dy,segs){
-        //let d=this.path.getAttribute("d");
-        //let segs=parse(d);
+        if(!Array.isArray(segs)) segs=parse(segs);
         Object.keys(segs).forEach(function(idx){
-            let segType=segs[idx][0].toLowerCase();
-            let p=segs[idx][0]>='A'&&segs[idx][0]<='Z'?1:0;
-            if(segType=='a'){
-                segs[idx][1]-=dx*p;
-                segs[idx][2]-=dy*p;
+            let segType=segs[idx][0];
+            if(segType=='A'){
+                segs[idx][1]-=dx;
+                segs[idx][2]-=dy;
 
-                segs[idx][6]-=dx*p;
-                segs[idx][7]-=dy*p;
-            }else if(segType=='v'){
-                segs[idx][1]-=dx*p;
-            }else if(segType=='h'){
-                segs[idx][1]-=dx*p;
-            }else{
+                segs[idx][6]-=dx;
+                segs[idx][7]-=dy;
+            }else if(segType=='V'){
+                segs[idx][1]-=dy;
+            }else if(segType=='H'){
+                segs[idx][1]-=dx;
+            }else if(segType>='A'&&segType<='Z'){
                 for(let i=1;i<segs[idx].length;i++){
                     if(i%2==1){
-                        segs[idx][i]-=dx*p;
+                        segs[idx][i]-=dx;
                     }else{
-                        segs[idx][i]-=dy*p;
+                        segs[idx][i]-=dy;
                     }
                 }
+            }else{
+               // console.log("Ignoring: ",segType);
             }
 
         });

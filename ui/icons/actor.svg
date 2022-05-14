@@ -1,10 +1,3 @@
-<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
- <g id="Layer_1">
-  <title>Layer 1</title>
-  <ellipse stroke-width="12" ry="62" rx="61" id="svg_1" cy="145.5" cx="405" stroke="#000" fill="none"/>
-  <line id="svg_2" y2="378" x2="404" y1="207" x1="404" stroke-width="12" stroke="#000" fill="none"/>
-  <line id="svg_4" y2="523" x2="295" y1="376" x1="405" stroke-width="12" stroke="#000" fill="none"/>
-  <line id="svg_5" y2="523" x2="531" y1="377" x1="404" stroke-width="12" stroke="#000" fill="none"/>
-  <line id="svg_6" y2="234" x2="542" y1="234" x1="268" stroke-width="12" stroke="#000" fill="none"/>
- </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -53 140 243">
+  <path d="M 70 -3 m -50, 0 a 50,50 0 1,0 100,0 a 50,50 0 1,0 -100,0 M 70 47.5 L 70 126.67 M 70 63.33 L 0 63.33 M 70 63.33 L 140 63.33 M 70 126.67 L 0 190 M 70 126.67 L 140 190" stroke="black" stroke-width="5" fill="#fff"/>
 </svg>

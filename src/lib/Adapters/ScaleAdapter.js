@@ -87,35 +87,39 @@ class ScaleAdapter{
 
     dragHandler(e){
         let handle=e.mousedown.target.getAttribute("data-handleid");
+        document.body.style.cursor=e.data.cursorDecider(handle*1);
         let sx=e.difference.x;
         let sy=e.difference.y;
         switch(handle){
             case "0":
-                e.data.base.scaleAll(-sx,-sy,handle);
+                e.data.base.scaleAll(-sy,-sy,handle);
             break;
             case "1":
                 e.data.base.scaleAll(-sx,0,handle);
             break;
             case "2":
-                e.data.base.scaleAll(-sx,sy,handle);
+                e.data.base.scaleAll(sy,sy,handle);
             break;
             case "3":
                 e.data.base.scaleAll(0,sy,handle);
             break;
             case "4":
-                e.data.base.scaleAll(sx,sy,handle);
+                e.data.base.scaleAll(sy,sy,handle);
             break;
             case "5":
                 e.data.base.scaleAll(sx,0,handle);
             break;
             case "6":
-                e.data.base.scaleAll(sx,-sy,handle);
+                e.data.base.scaleAll(-sy,-sy,handle);
             break;
             case "7":
                 e.data.base.scaleAll(0,-sy,handle);
             break;
         }
         e.data.showHandles();
+        if(e.mouseup!=undefined){
+            document.body.style.cursor="default";
+        }
     }
 
     cursorDecider(id){
