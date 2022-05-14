@@ -3,6 +3,7 @@ class Path{
         this.canvas=canvas;
         this.__init__();
         this.addScaleAdapter(this.group);
+        this.addMoveAdapter();
     }
     /**
      * 
@@ -71,6 +72,9 @@ class Path{
     }
     addScaleAdapter(){
         this.scaleAdapter=new ScaleAdapter(this.getHookerElement(),this);
+    }
+    addMoveAdapter(){
+        this.moveAdapter=new MoveAdapter(this.getHookerElement(),this);
     }
     /**
      * 
@@ -173,7 +177,10 @@ class Path{
         if(pch.width<30||pch.height<30) return;
         this.updatePath(pathData);
     }
-    moveAll(dx,dy,segs){
+    moveAll(dx,dy,segs,update){
+        if(dx==undefined||dy==undefined) return;
+        if(update) this.removeHandles();
+        if(segs==undefined) segs=this.path.getAttribute("d");
         if(!Array.isArray(segs)) segs=parse(segs);
         Object.keys(segs).forEach(function(idx){
             let segType=segs[idx][0];
@@ -200,7 +207,7 @@ class Path{
             }
 
         });
-        
+        if(update==true) this.updatePath(serialize(segs));
         return segs;
     }
 

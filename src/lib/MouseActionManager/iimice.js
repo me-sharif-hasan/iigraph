@@ -46,6 +46,7 @@ class iimise{
             dragEvent["dragstart"]={"x":mousedown.clientX,"y":mousedown.clientY};
             dragEvent["difference"]={"dx":0,"dy":0};
             dragEvent["data"]=data;
+            dragEvent["mouseMoved"]=false;
 
             let sx=mousedown.clientX;
             let sy=mousedown.clientY;
@@ -55,10 +56,11 @@ class iimise{
                 sy=mousemove.clientY;
                 dragEvent["mousemove"]=mousemove;
                 functionName(dragEvent);
+                dragEvent["mouseMoved"]=true;
             }
             let wmv = $(window).on("mousemove",mouseMoveHandler,flag);
             let mouseUpHandler=function(mouseup){
-                ref.captureClick(window);
+                if(dragEvent["mouseMoved"]) ref.captureClick(window);
                 wmv.unset("mousemove",mouseMoveHandler,flag);
                 wmv.unset("mouseup",mouseUpHandler,flag);
                 dragEvent["mouseup"]=mouseup;
