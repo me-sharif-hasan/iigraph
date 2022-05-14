@@ -15,6 +15,7 @@ class Path{
     __init__(){
         this.group=this.createSVGElement("g");
         this.path=this.createSVGElement("path");
+        this.addParameter("class","shape");
         this.group.append(this.path);
         this.canvas.append(this.group);
     }

@@ -1,6 +1,7 @@
 :root{
     --sidebar_width: 17%;
     --navigationbar_height: 54px;
+    --move_icon: url(/ui/css/icons/move.png);
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 @keyframes grow {
@@ -159,4 +160,7 @@ animation-iteration-count: infinite;
 .handle-circle:hover,.handle-circle-hover{
     fill: blue;
     r:7px;
+}
+.shape{
+    cursor: var(--move_icon) 14 14,auto;
 }

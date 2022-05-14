@@ -12,6 +12,8 @@ class Circle extends Path{
         let R=50;
         let cmd=this.circlePath(cx,cy,50);
         this.updatePath(cmd);
+        this.fill("white");
+        this.stroke("black");
     }
     /**
      * CirclePath - Create SVG path for a circle by the given information.
