@@ -34,6 +34,7 @@ class Path{
         }
         this.handle=undefined;
         }
+        this.removePlaceholder();
     }
     /**
      * 
@@ -53,6 +54,10 @@ class Path{
         this.addParameter("d",d,this.placeholder);
         this.addParameter("style","visibility:hidden;",this.placeholder);
         return this.placeholder;
+    }
+    removePlaceholder(){
+        if(this.placeholder!=undefined) this.placeholder.remove();
+        this.placeholder=undefined;
     }
     
     /**
@@ -89,9 +94,10 @@ class Path{
         this.addParameter("stroke-width",width,this.path);
     }
     scaleAll(dx,dy,handle){
+        if(handle=="0"||handle=="2") dy=dx;
+        else if(handle=="4"||handle=="6") dx=dy;
         let d=this.path.getAttribute("d");
         let segs=parse(d);
-        console.log(segs);
         if(segs==false){
             console.warn("Can't parse!");
             return;
@@ -165,7 +171,7 @@ class Path{
         segs=this.moveAll(dx,dy,segs);
         let pathData=serialize(segs);
         let pch=this.createPlaceholder(pathData).getBBox();
-        if(pch.width<3||pch.height<3) return;
+        if(pch.width<30||pch.height<30) return;
         this.updatePath(pathData);
     }
     moveAll(dx,dy,segs){
