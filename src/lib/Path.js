@@ -182,12 +182,14 @@ class Path{
     scaleAll(dx,dy,handle){
         let ref=this;
         let allD=[];
+        let willUpdate=true;
         this.path.map(function(shape){
             let d=shape.getAttribute("d");
             let sd=ref.scale(dx,dy,d,handle);
+            if(sd==false || !willUpdate) {willUpdate=false;return;}
             allD.push(sd);
         });
-        ref.updatePath(allD);
+        if(willUpdate) ref.updatePath(allD);
     }
     /**
      * scale method will scale a path provided by d parameter.
@@ -272,7 +274,7 @@ class Path{
         }
         let pathData=this.move(dx,dy,segs);
         let pch=this.createPlaceholder(pathData).getBBox();
-        if(pch.width<30||pch.height<30) return d;
+        if(pch.width<3||pch.height<3) return false;
         return pathData;
     }
     
