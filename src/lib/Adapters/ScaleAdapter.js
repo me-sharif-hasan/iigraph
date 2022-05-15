@@ -122,6 +122,10 @@ class ScaleAdapter{
         }
     }
 
+    scale(){
+        path=this.base.getAllPaths();
+    }
+
     cursorDecider(id){
         let cursor="resize";
         switch(id){

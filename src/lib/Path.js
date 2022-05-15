@@ -15,9 +15,6 @@ class Path{
     }
     __init__(){
         this.group=this.createSVGElement("g");
-        this.path=this.createSVGElement("path");
-        this.addParameter("class","shape");
-        this.group.append(this.path);
         this.canvas.append(this.group);
     }
     addHandles(handle){
@@ -48,6 +45,32 @@ class Path{
         (element==undefined?this.group:element).setAttributeNS(null, parameterName, parameterValue);
     }
 
+    /**
+     * addPath will add a new path to the shape given path directive.
+     * @param {string} d Path directive.
+     */
+    addPath(d){
+        if(this.path===undefined) {
+            this.path=new Array();
+        }
+        let shape=this.createSVGElement("path");
+        this.addParameter("class","shape",shape);
+        this.addParameter("d",d,shape);
+        this.path.push(shape);
+        this.getHookerElement().append(shape);
+    }
+    /**
+     * This function will return the idx'th path if idx is given else it will return all path.
+     * @param {Interger} idx Index of the path, index is ordered by cronological manner.
+     * @returns Array, contains SVG path.
+     */
+    getPaths(idx){
+        if(idx!=undefined){
+            return [this.path[idx]];
+        }else{
+            return this.path;
+        }
+    }
     createPlaceholder(d){
         if(this.placeholder==undefined){
             this.placeholder=this.createSVGElement("path");
@@ -63,12 +86,30 @@ class Path{
     }
     
     /**
-    * updatePath
-    * @param {string} path - path for SVG path
-    */
-    
-    updatePath(path){
-        this.addParameter("d",path,this.path);
+     * updatePath will update idx'th path if idx is given, else it will update all path.
+     * @param {string[]?} d  The path directives. If idx is not given, then it has to be an array.
+     * @param {Number} idx Optional. If given, only idx'th path will be updated.
+     */
+    updatePath(d,idx){
+        let ref=this;
+        if(idx==undefined){
+            if(!Array.isArray(d)){
+                if(ref.path.length>1){
+                    console.error("d has to be an array of size "+ref.path.length);
+                    return;
+                }else{
+                    d=[d];
+                }
+            }else if(d.length!=this.path.length){
+                console.error("d has to be an array of size "+ref.path.length);
+                return;
+            }
+            this.path.map(function(shape,i){
+                ref.addParameter("d",d[i],shape);
+            });
+        }else{
+            ref.addParameter("d",d,this.path[idx]);
+        }
     }
     addScaleAdapter(){
         this.scaleAdapter=new ScaleAdapter(this.getHookerElement(),this);
@@ -85,22 +126,80 @@ class Path{
     }
 
     /* SVG related methods*/
+
     /**
-     * Set fill color
-     * @param {String} color Color
+     * fill will set the fill color to the shape.
+     * @param {Number} width Fill color.
+     * @param {Integer} idx Index of shape in the composition. Can be undefined.
      */
-    fill(color){
-        this.addParameter("fill",color,this.path);
+    fill(color,idx){
+        let ref=this;
+        if(idx==undefined){
+            this.path.forEach(function(shape){
+                ref.addParameter("fill",color,shape);
+            });
+        }else{
+            ref.addParameter("fill",color,this.path[idx]);
+        }
     }
-    stroke(color){
-        this.addParameter("stroke",color,this.path);
+    /**
+     * stroke will set the stroke color to the shape.
+     * @param {Number} width Stroke color.
+     * @param {Integer} idx Index of shape in the composition. Can be undefined.
+     */
+    stroke(color,idx){
+        let ref=this;
+        if(idx==undefined){
+            this.path.forEach(function(shape){
+                ref.addParameter("stroke",color,shape);
+            });
+        }else{
+            ref.addParameter("stroke",color,this.path[idx]);
+        }
     }
-    strokeWidth(width){
-        this.addParameter("stroke-width",width,this.path);
+    /**
+     * strokeWidth will set the stroke width to the shape.
+     * @param {Number} width Stroke width.
+     * @param {Integer} idx Index of shape in the composition. Can be undefined.
+     */
+    strokeWidth(width,idx){
+        let ref=this;
+        if(idx==undefined){
+            this.path.forEach(function(shape){
+                ref.addParameter("stroke-width",width,shape);
+            });
+        }else{
+            ref.addParameter("stroke-width",width,this.path[idx]);
+        }
     }
+    
+    /**
+     * scaleAll scales all the shapes in the group.
+     * @param {Number} dx Scale along x axis.
+     * @param {Number} dy Scale along y axis.
+     * @param {Integer} handle Corner at which user is dragging.
+     */
     scaleAll(dx,dy,handle){
-        let d=this.path.getAttribute("d");
-        let segs=parse(d);
+        let ref=this;
+        let allD=[];
+        this.path.map(function(shape){
+            let d=shape.getAttribute("d");
+            let sd=ref.scale(dx,dy,d,handle);
+            allD.push(sd);
+        });
+        ref.updatePath(allD);
+    }
+    /**
+     * scale method will scale a path provided by d parameter.
+     * @param {Number} dx Scale along x axis.
+     * @param {Number} dy Scale along y axis.
+     * @param {string[]?} d The path on which scale will be done. 
+     * @param {Integer} handle 
+     * @returns Scalled path string.
+     */
+    scale(dx,dy,d,handle){
+        let segs=d;
+        if(!Array.isArray(d)) segs=parse(d);
         if(segs==false){
             console.warn("Can't parse!");
             return;
@@ -171,17 +270,37 @@ class Path{
                 dy*=-1;
                 break;
         }
-        segs=this.moveAll(dx,dy,segs);
-        let pathData=serialize(segs);
+        let pathData=this.move(dx,dy,segs);
         let pch=this.createPlaceholder(pathData).getBBox();
-        if(pch.width<30||pch.height<30) return;
-        this.updatePath(pathData);
+        if(pch.width<30||pch.height<30) return d;
+        return pathData;
     }
-    moveAll(dx,dy,segs,update){
-        if(dx==undefined||dy==undefined) return;
-        if(update) this.removeHandles();
-        if(segs==undefined) segs=this.path.getAttribute("d");
-        if(!Array.isArray(segs)) segs=parse(segs);
+    
+    /**
+     * moveAll will move whole shape to a new position along x and y axis.
+     * @param {Number} dx Shift along x axis.
+     * @param {Number} dy Shift along y axis.
+     */
+    moveAll(dx,dy){
+        this.removeHandles();
+        let ref=this;
+        let allD=[];
+        this.path.map(function(shape){
+            let d=shape.getAttribute("d");
+            let sd=ref.move(dx,dy,d);
+            allD.push(sd);
+        });
+        ref.updatePath(allD);
+    }
+    /**
+     * moveAll will move specific path string to a new position along x and y axis.
+     * @param {Number} dx Shift along x axis.
+     * @param {Number} dy Shift along y axis.
+     */
+    move(dx,dy,d){
+        let segs=d;
+        if(!Array.isArray(d)) segs=parse(d);
+        if(dx==undefined||dy==undefined) return Array.isArray(d)?serialize(d):d;
         Object.keys(segs).forEach(function(idx){
             let segType=segs[idx][0];
             if(segType=='A'){
@@ -207,8 +326,7 @@ class Path{
             }
 
         });
-        if(update==true) this.updatePath(serialize(segs));
-        return segs;
+        return serialize(segs);
     }
 
 }
