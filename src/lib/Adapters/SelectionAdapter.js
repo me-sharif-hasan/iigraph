@@ -53,7 +53,6 @@ class SelectionAdapter{
         this.factory.allShapes.forEach(function(elm){
             let bbox=elm.getHookerElement().getBBox();
             if(bbox.x>=box.x&&bbox.y>=box.y&&bbox.width+bbox.x<=box.x+box.width&&bbox.height+bbox.y<=box.height+box.y){
-                console.log(elm.constructor.name+" is selected");
                 elm.selected(true);
                 shapes.push(elm);
             }
