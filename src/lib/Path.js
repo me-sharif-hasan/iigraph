@@ -17,6 +17,10 @@ class Path{
         this.group=this.createSVGElement("g");
         this.canvas.append(this.group);
     }
+    /**
+     * Create and show handles
+     * @param {JSON} handle JSON object with lines and circles
+     */
     addHandles(handle){
         this.handle=handle;
         this.canvas.append(handle["lines"]);
@@ -25,6 +29,9 @@ class Path{
             ref.canvas.append(elm);
         });
     }
+    /**
+     * Remove the handles
+     */
     removeHandles(){
         if(this.handle!=undefined){
         if(this.handle["lines"]!=undefined) this.handle["lines"].remove();
@@ -329,6 +336,11 @@ class Path{
 
         });
         return serialize(segs);
+    }
+
+    selected(value){
+        if(value!=undefined) this.isSelected=value;
+        return this.isSelected;
     }
 
 }

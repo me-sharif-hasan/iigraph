@@ -93,7 +93,9 @@ body{
     width: 100%;
     height: 100%;
 }
-
+.drop{
+ user-select: none;
+}
 .drop .title{
     padding: 5px 4px 5px 5px;
     cursor: pointer;
@@ -147,7 +149,7 @@ body{
         stroke-dashoffset:10.5;
     }
 }
-.handle-lines{
+.handle-lines,.selection-rect{
 fill: none;
 stroke: #000;
 stroke-dasharray: 5;
@@ -163,4 +165,8 @@ animation-iteration-count: infinite;
 }
 .shape{
     cursor: var(--move_icon) 14 14,auto;
+}
+.selection-rect{
+    fill: #ccc3;
+    stroke: aqua;
 }

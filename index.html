@@ -29,10 +29,10 @@
                 <label for="general-switch" class="title">General</label>
                 <div class="holder">
                     <input type="image" name="circle" src="ui/icons/circle.svg" class="shape-icon"/>
-                    <input type="image" name="circle" src="ui/icons/iso-triange.svg" class="shape-icon"/>
-                    <input type="image" name="circle" src="ui/icons/square.svg" class="shape-icon"/>
-                    <input type="image" name="circle" src="ui/icons/90deg-triangle.svg" class="shape-icon"/>
-                    <input type="image" name="circle" src="ui/icons/rect.svg" class="shape-icon"/>
+                    <input type="image" name="iso-triange" src="ui/icons/iso-triange.svg" class="shape-icon"/>
+                    <input type="image" name="square" src="ui/icons/square.svg" class="shape-icon"/>
+                    <input type="image" name="90deg-triangle" src="ui/icons/90deg-triangle.svg" class="shape-icon"/>
+                    <input type="image" name="rect" src="ui/icons/rect.svg" class="shape-icon"/>
                 </div>
             </div>
 
@@ -40,9 +40,9 @@
                 <input type="checkbox" class="hidden toggler" id="misc-switch">
                 <label for="misc-switch" class="title">Misc</label>
                 <div class="holder">
-                    <input type="image" name="circle" src="ui/icons/heart.svg" class="shape-icon"/>
-                    <input type="image" name="circle" src="ui/icons/cloud.svg" class="shape-icon"/>
-                    <input type="image" name="circle" src="ui/icons/actor.svg" class="shape-icon"/>
+                    <input type="image" name="heart" src="ui/icons/heart.svg" class="shape-icon"/>
+                    <input type="image" name="cloud" src="ui/icons/cloud.svg" class="shape-icon"/>
+                    <input type="image" name="human" src="ui/icons/actor.svg" class="shape-icon"/>
                 </div>
             </div>
 
@@ -59,18 +59,22 @@
     <script type="text/javascript" src="src/lib/Shapes/Circle.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Heart.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Human.js"></script>
+    <script type="text/javascript" src="src/lib/Shapes/Cloud.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/ScaleAdapter.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/MoveAdapter.js"></script>
     <script type="text/javascript" src="src/lib/MouseActionManager/iimice.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/SelectionAdapter.js"></script>
 
     <script type="text/javascript" src="src/PathParser.js"></script>
-    <script type="text/javascript" src="src/lib/Shapes/Cloud.js"></script>
+    <script type="text/javascript" src="src/Factory.js"></script>
     <script>
-        new Circle(document.getElementById("canvas"));
-        new Heart(document.getElementById("canvas"));
-        new Cloud(document.getElementById("canvas"));
-        new Human(document.getElementById("canvas"));
+        let factory=new Factory(document.getElementById("canvas"));
+        let icns=document.getElementsByClassName("shape-icon")
+        Object.keys(icns).forEach(function(e){
+            $(icns[e]).on("click",function(x){
+                factory.create(x.target.name);
+            });
+        });
     </script>
     </body>
 </html>
