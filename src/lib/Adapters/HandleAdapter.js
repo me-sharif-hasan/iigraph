@@ -1,27 +1,14 @@
-class ScaleAdapter{
+class HandleAdapter{
     /**
-     * 
-     * @param {SVG elements} element The SVG element which will be scalled.
-     * @param {Path} base For appending of handles.
+     * HandleAdapter class helps to construct handles for a shape.
+     * @param {Path} base Base shape.
      */
-    constructor(element,base){
-        this.element=element;
+    constructor(base){
         this.base=base;
-        this.__init__();
     }
-    __init__(){
-        let ref=this;
-        $(window).on("click",function(e){
-            if(e.target.parentNode.isEqualNode(ref.element)){
-                ref.showHandles();
-            }else{
-                ref.base.removeHandles();
-            }
-        });
-    }
-
+    
     getBBox(){
-        return this.element.getBBox();
+        return this.base.getHookerElement().getBBox();
     }
 
     showHandles(){
@@ -84,44 +71,6 @@ class ScaleAdapter{
         this.base.addParameter("style","cursor:"+this.cursorDecider(id)+";",circle);
         return circle;
     }
-
-    dragHandler(e){
-        let handle=e.mousedown.target.getAttribute("data-handleid");
-        document.body.style.cursor=e.data.cursorDecider(handle*1);
-        let sx=e.difference.x;
-        let sy=e.difference.y;
-        switch(handle){
-            case "0":
-                e.data.base.scaleAll(-sy,-sy,handle);
-            break;
-            case "1":
-                e.data.base.scaleAll(-sx,0,handle);
-            break;
-            case "2":
-                e.data.base.scaleAll(sy,sy,handle);
-            break;
-            case "3":
-                e.data.base.scaleAll(0,sy,handle);
-            break;
-            case "4":
-                e.data.base.scaleAll(sy,sy,handle);
-            break;
-            case "5":
-                e.data.base.scaleAll(sx,0,handle);
-            break;
-            case "6":
-                e.data.base.scaleAll(-sy,-sy,handle);
-            break;
-            case "7":
-                e.data.base.scaleAll(0,-sy,handle);
-            break;
-        }
-        e.data.showHandles();
-        if(e.mouseup!=undefined){
-            document.body.style.cursor="default";
-        }
-    }
-
 
     cursorDecider(id){
         let cursor="resize";
