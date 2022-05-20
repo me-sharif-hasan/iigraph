@@ -1,5 +1,6 @@
 class Factory{
     allShapes=[];
+    events={};
     constructor(canvas){
         this.canvas=canvas;
         this.selectionAdapter=new SelectionAdapter(this);
@@ -27,6 +28,10 @@ class Factory{
                 shape=new Cloud(this.canvas);
             break;
         }
+        let ref=this;
+        Object.keys(this.events).forEach(function(name){
+            $(shape).on(name,ref.events[name]);
+        });
         this.allShapes.push(shape);
         return shape;
     }
@@ -37,5 +42,40 @@ class Factory{
      */
     getAllShapes(){
         return this.allShapes;
+    }
+    getselected(){
+        let selected=[];
+        this.allShapes.forEach(function(shape){
+            if(shape.selected()){
+                selected.push(shape);
+            }
+        });   
+        return selected;    
+    }
+    sortShapes(shapes){
+        let ref=this;
+        let order=[];
+        Object.keys(this.canvas.childNodes).forEach(function(i){
+            shapes.forEach(function(shape){
+                if(ref.canvas.childNodes[i]==shape.getHookerElement()){
+                    order.push(shape);
+                }
+            });
+        });
+        return order;
+    }
+    selectedGoBack(){
+        this.sortShapes(this.getselected()).forEach(function(shape){
+            shape.toBack();
+        });
+    }
+    selectedComeFront(){
+        this.sortShapes(this.getselected()).reverse().forEach(function(shape){
+            shape.toFront();
+        });
+    }
+    addEventListener(name,fn){
+        if(this.events[name]==undefined) this.events[name]=[];
+        this.events[name].push(fn);
     }
 }

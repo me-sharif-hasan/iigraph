@@ -12,7 +12,7 @@ class SelectionAdapter{
             if(e.mousedown.target!=factory.canvas) return;
             if(rect==undefined){
                 rect=document.createElementNS("http://www.w3.org/2000/svg","polygon")
-                rect.setAttributeNS(null,"class","selection-rect");
+                rect.setAttributeNS(null,"class","selection-rect drag-selector");
                 factory.canvas.appendChild(rect);
             }
             if(e.mousemove!=undefined){
@@ -29,7 +29,8 @@ class SelectionAdapter{
                 w=h=0;
             }
         });
-        $(document).on("click",function(e){
+        $(window).on("click",function(e){
+            if(!ref.factory.canvas.contains(e.target)) return;
             if(ref.selectionMarker!=undefined){
                 ref.selectionMarker.remove();
                 ref.selectionMarker=undefined;

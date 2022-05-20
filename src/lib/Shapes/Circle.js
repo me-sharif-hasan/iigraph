@@ -7,13 +7,10 @@ class Circle extends Path{
      * createCircle - Initiate a circle.
      */
     createCircle(){
-        let cx=200;
-        let cy=300;
-        let R=50;
-        let cmd=this.circlePath(cx,cy,50);
-        this.addPath(cmd);
-        this.fill("white",0);
-        cmd=this.circlePath(cx,cy,25);
+        let cx=300;
+        let cy=170;
+        let R=100;
+        let cmd=this.circlePath(cx,cy,R);
         this.addPath(cmd);
         this.fill("red",1);
         this.stroke("black");

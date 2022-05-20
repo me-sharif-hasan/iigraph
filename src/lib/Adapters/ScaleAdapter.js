@@ -1,6 +1,6 @@
 class ScaleAdapter{
     /**
-     * 
+     * Set up the machanism of Shape scalling.
      * @param {SVG elements} element The SVG element which will be scalled.
      * @param {Path} base For appending of handles.
      */
@@ -14,8 +14,9 @@ class ScaleAdapter{
         $(window).on("click",function(e){
             if(e.target.parentNode.isEqualNode(ref.element)){
                 ref.showHandles();
-            }else{
+            }else if(ref.base.canvas.contains(e.target)){
                 ref.base.removeHandles();
+                ref.base.selected(false);
             }
         });
     }
@@ -60,6 +61,7 @@ class ScaleAdapter{
         this.base.addParameter("class","handle-lines",lines);
         handle["lines"]=lines;
         this.base.addHandles(handle);
+        this.base.selected(true);
     }
     createHandleCircle(cx,cy,id){
         if(this.handles==undefined){
@@ -98,19 +100,19 @@ class ScaleAdapter{
                 e.data.base.scaleAll(-sx,0,handle);
             break;
             case "2":
-                e.data.base.scaleAll(sy,sy,handle);
+                e.data.base.scaleAll(-sx,sy,handle);
             break;
             case "3":
                 e.data.base.scaleAll(0,sy,handle);
             break;
             case "4":
-                e.data.base.scaleAll(sy,sy,handle);
+                e.data.base.scaleAll(sx,sy,handle);
             break;
             case "5":
                 e.data.base.scaleAll(sx,0,handle);
             break;
             case "6":
-                e.data.base.scaleAll(-sy,-sy,handle);
+                e.data.base.scaleAll(sx,-sy,handle);
             break;
             case "7":
                 e.data.base.scaleAll(0,-sy,handle);

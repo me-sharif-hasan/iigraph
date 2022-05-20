@@ -101,7 +101,7 @@ body{
     cursor: pointer;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
-    margin: 3px 0 0 0;
+    margin: 0;
     display: block;
     user-select: none;
 }
@@ -117,7 +117,7 @@ body{
 }
 .drop .holder{
      overflow-y: scroll;
-     padding: 10px 2px 0 2px;
+     padding: 0 2px 0 2px;
 }
 .drop .toggler:not(:checked)~.holder{
     animation-fill-mode: forwards;
@@ -128,7 +128,6 @@ body{
     animation-name: grow;
     animation-duration: 2s;
     animation-fill-mode: forwards;
-    overflow-y: scroll;
 }
 .drop .toggler:checked~.title::before{
     transform: rotate(90deg);
@@ -137,6 +136,9 @@ body{
 .shape-icon{
     height: 40px;
     width: 40px;
+}
+.holder .subholder{
+    margin-top: 10px;
 }
 
 
@@ -171,7 +173,10 @@ animation-iteration-count: infinite;
 }
 .selection-rect{
     fill: #ccc3;
-    stroke: aqua;
+    stroke: rgb(0, 0, 0);
+}
+.drag-selector{
+    pointer-events: none;
 }
 #canvas{
     background:
@@ -185,4 +190,41 @@ animation-iteration-count: infinite;
         linear-gradient(#aaa 1px, transparent 1px),
         #f2f2f2;
     background-size: 10px 10px, 10px 10px, 80px 80px, 80px 80px, 80px 80px, 80px 80px, 80px 80px, 80px 80px;
+}
+
+.button-type-1{
+    width: 40px;
+    padding: 0 15px 0 15px;
+    background: #c4c4c4;
+    border-radius: 11px;
+    box-shadow: 0 0 3px;
+    margin-right: 8px;
+}
+
+.button-type-1:hover{
+    background: #fff;
+    box-shadow: 0 0 5px black;
+}
+
+#fill div{
+    width: 92%;
+}
+#fill .property-field{
+    padding: 3px 5px 2px 10px;
+    height: 26px;
+    background: #eaeaea;
+    border-radius: 3px;
+    border: 1px solid #d9d9d9;
+}
+#fill div .property-title{
+    width: 50%;
+    float: left;
+}
+#fill div .shape-fill-color{
+    width: 30%;
+    float: right;
+    height: 24px;
+    border-radius: 30px;
+    border: 1px dotted black;
+    cursor: pointer;
 }

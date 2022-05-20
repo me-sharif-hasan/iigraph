@@ -3,6 +3,8 @@
     <head>
         <title>iigraph-A visual flowchart editor and animator</title>
         <link rel="stylesheet" href="ui/css/main.css">
+        <link rel="stylesheet" href="ui/fontawesome/css/fontawesome.min.css">
+
     </head>
     <body>
     <div class="container">
@@ -28,11 +30,13 @@
                 <input type="checkbox" class="hidden toggler" id="general-switch">
                 <label for="general-switch" class="title">General</label>
                 <div class="holder">
+                    <div class="subholder">
                     <input type="image" name="circle" src="ui/icons/circle.svg" class="shape-icon"/>
                     <input type="image" name="iso-triange" src="ui/icons/iso-triange.svg" class="shape-icon"/>
                     <input type="image" name="square" src="ui/icons/square.svg" class="shape-icon"/>
                     <input type="image" name="90deg-triangle" src="ui/icons/90deg-triangle.svg" class="shape-icon"/>
                     <input type="image" name="rect" src="ui/icons/rect.svg" class="shape-icon"/>
+                    </div>
                 </div>
             </div>
 
@@ -40,9 +44,11 @@
                 <input type="checkbox" class="hidden toggler" id="misc-switch">
                 <label for="misc-switch" class="title">Misc</label>
                 <div class="holder">
+                    <div class="subholder">
                     <input type="image" name="heart" src="ui/icons/heart.svg" class="shape-icon"/>
                     <input type="image" name="cloud" src="ui/icons/cloud.svg" class="shape-icon"/>
                     <input type="image" name="human" src="ui/icons/actor.svg" class="shape-icon"/>
+                    </div>
                 </div>
             </div>
 
@@ -52,7 +58,19 @@
             </svg>          
         </div>
         <div class="right-sidebar">
-
+            <div class="drop">
+                <input type="checkbox" class="hidden toggler" id="shape-property-switch">
+                <label for="shape-property-switch" class="title">Property</label>
+                <div class="holder">
+                    <div class="positioner subholder">
+                        <input class="button-type-1 " id="shape-to-back" type="image" src="ui/icons/sendback.svg"/>
+                        <input class="button-type-1" id="shape-to-front" type="image" src="ui/icons/bringforward.svg"/>
+                    </div>
+                    <div class="color subholder">
+                        <div id="fill"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script type="text/javascript" src="src/lib/Path.js"></script>
@@ -75,6 +93,36 @@
                 factory.create(x.target.name);
             });
         });
+        $(document.getElementById("shape-to-back")).on("click",function(e){
+            factory.selectedGoBack();
+        });
+        $(document.getElementById("shape-to-front")).on("click",function(e){
+            factory.selectedComeFront();
+        });
+        $(factory).on("select",function(shape){
+            let id=shape.name;
+            if(shape.selected()){
+                let elm=null;
+                if(document.getElementById(id)==undefined){
+                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title">Fill '+shape.name+'</div><div class="shape-fill-color"></div></div>');
+                    document.getElementById("fill").appendChild(elm);
+                }else{
+                    elm=document.getElementById(id);
+                }
+                elm.childNodes[1].style.background=shape.getFillColor();
+            }else{
+                if(document.getElementById(id)!=undefined){
+                    document.getElementById(id).remove();
+                }
+            }
+        })
+
+        function htmlToElement(html) {
+            var template = document.createElement('template');
+            html = html.trim(); // Never return a text node of whitespace as the result
+            template.innerHTML = html;
+            return template.content.firstChild;
+        }
     </script>
     </body>
 </html>

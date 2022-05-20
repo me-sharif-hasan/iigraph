@@ -1,12 +1,16 @@
 class Path{
+    events={};
+    static id=0;
     constructor(canvas){
+        Path.id++;
+        this.name=this.constructor.name+" "+Path.id;
         this.canvas=canvas;
         this.__init__();
         this.addScaleAdapter(this.group);
         this.addMoveAdapter();
     }
     /**
-     * 
+     * Create SVG element
      * @param {string} name SVG element name.
      * @returns The SVG element.
      */
@@ -28,6 +32,7 @@ class Path{
         handle["circles"].forEach(function(elm){
             ref.canvas.append(elm);
         });
+        //this.selected(true);
     }
     /**
      * Remove the handles
@@ -41,7 +46,9 @@ class Path{
         this.handle=undefined;
         }
         this.removePlaceholder();
+        //this.selected(false);
     }
+    
     /**
      * 
      * @param {string} parameterName Name of the parameter.
@@ -140,6 +147,7 @@ class Path{
      * @param {Integer} idx Index of shape in the composition. Can be undefined.
      */
     fill(color,idx){
+        this.fillColor=color;
         let ref=this;
         if(idx==undefined){
             this.path.forEach(function(shape){
@@ -148,6 +156,9 @@ class Path{
         }else{
             ref.addParameter("fill",color,this.path[idx]);
         }
+    }
+    getFillColor(){
+        return this.fillColor;
     }
     /**
      * stroke will set the stroke color to the shape.
@@ -292,6 +303,7 @@ class Path{
      */
     moveAll(dx,dy){
         this.removeHandles();
+        this.selected(false);
         let ref=this;
         let allD=[];
         this.path.map(function(shape){
@@ -337,10 +349,52 @@ class Path{
         });
         return serialize(segs);
     }
-
+    /**
+     * Set or get current selection state.
+     * @param {boolean} value set the selection state
+     * @returns boolean-current selection state
+     */
     selected(value){
-        if(value!=undefined) this.isSelected=value;
+        if(this.isSelected==undefined) this.isSelected=false;
+        if(value!=undefined){
+            let temp=this.isSelected;
+            this.isSelected=value;
+            if(temp!=value) 
+                this.callEvents("select");
+        }
         return this.isSelected;
+    }
+    /**
+     * Send group to one step backward in DOM tree.
+     */
+    toBack(){
+        if(this.getHookerElement().previousElementSibling!=null&&this.getHookerElement().previousElementSibling.tagName=="g")
+            this.canvas.insertBefore(this.getHookerElement(),this.getHookerElement().previousElementSibling);
+    }
+    /**
+     * Bring group to one step forward in DOM tree.
+     */
+    toFront(){
+        if(this.getHookerElement().nextElementSibling!=null&&this.getHookerElement().nextElementSibling.tagName=="g")
+            this.canvas.insertBefore(this.getHookerElement().nextElementSibling,this.getHookerElement());
+    }
+
+    addEventListener(name,fn){
+        if(this.events[name]==undefined) this.events[name]=[];
+        if(!Array.isArray(fn)){
+            fn=[fn];
+        }
+        let ref=this;
+        fn.forEach(function(f){
+            ref.events[name].push(f);
+        })
+    }
+    callEvents(name){
+        if(this.events[name]==undefined) this.events[name]=[];
+        let ref=this;
+        this.events[name].forEach(function(f){
+            f(ref);
+        })
     }
 
 }
