@@ -3,7 +3,7 @@ class MoveAdapter{
         this.element=elm;
         this.base=base;
         $(elm).on("drag",function(e){
-            base.moveAll(e.difference.x,e.difference.y);
+            if(e.mousemove!=undefined) base.moveAll(e.difference.x,e.difference.y);
         },false,this);
     }
 }

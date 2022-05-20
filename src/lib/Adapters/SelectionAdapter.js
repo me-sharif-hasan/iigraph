@@ -9,7 +9,15 @@ class SelectionAdapter{
         let rect=undefined;
         let w=0,h=0;
         $(factory.canvas).on("drag",function(e){
-            if(e.mousedown.target!=factory.canvas) return;
+            if(e.mouseup&&rect!=undefined){
+                ref.processSelected(rect.getBBox());
+                rect.remove();
+                rect=undefined;
+                w=h=0;
+                return;
+            }
+            if(!e.mousedown.target.isEqualNode(ref.factory.canvas)) return;
+            if(e.mousemove==undefined||!factory.canvas.contains(e.mousemove.target)) return;
             if(rect==undefined){
                 rect=document.createElementNS("http://www.w3.org/2000/svg","polygon")
                 rect.setAttributeNS(null,"class","selection-rect drag-selector");
@@ -21,12 +29,6 @@ class SelectionAdapter{
                 s+=" "+e.mousemove.layerX+","+e.mousemove.layerY;
                 s+=" "+e.mousemove.layerX+","+e.mousedown.layerY;
                 rect.setAttributeNS(null,"points",s);
-            }
-            if(e.mouseup){
-                ref.processSelected(rect.getBBox());
-                rect.remove();
-                rect=undefined;
-                w=h=0;
             }
         });
         $(window).on("click",function(e){
@@ -83,17 +85,28 @@ class SelectionAdapter{
         if(box.x2>0&&box.y2>0){
             this.selectionMarker=document.createElementNS("http://www.w3.org/2000/svg","polygon")
             this.selectionMarker.setAttributeNS(null,"class","selection-rect");
+            let markerFor={};
+            this.selectedShapes.forEach(function(shape){
+                markerFor[shape.name]=true;
+            });
+            this.selectionMarker.setAttributeNS(null,"data-markerfor",JSON.stringify(markerFor));
             let s=box.x1+","+box.y1+" "+box.x1+","+box.y2+" "+box.x2+","+box.y2+" "+box.x2+","+box.y1;
             this.selectionMarker.setAttributeNS(null,"points",s);
             this.factory.canvas.appendChild(this.selectionMarker);
             let ref=this;
             $(ref.selectionMarker).on("drag",function(e){
                 ref.selectedShapes.forEach(function(shape){
+                    shape.allowHandle(false);
                     shape.moveAll(e.difference.x,e.difference.y);
                     box=ref.getSelectionBounds(ref.selectedShapes);
                     let s=box.x1+","+box.y1+" "+box.x1+","+box.y2+" "+box.x2+","+box.y2+" "+box.x2+","+box.y1;
                     ref.selectionMarker.setAttributeNS(null,"points",s);
                 });
+                if(e.mouseup!=undefined){
+                    ref.selectedShapes.forEach(function(shape){
+                        shape.allowHandle(true);
+                    });
+                }
             });
         }
     }

@@ -21,11 +21,15 @@ class Path{
         this.group=this.createSVGElement("g");
         this.canvas.append(this.group);
     }
+    allowHandle(flag){
+        this.isHandleAllowed=flag;
+    }
     /**
      * Create and show handles
      * @param {JSON} handle JSON object with lines and circles
      */
     addHandles(handle){
+        if(this.handle!=undefined||this.isHandleAllowed==false) return;
         this.handle=handle;
         this.canvas.append(handle["lines"]);
         let ref=this;
@@ -204,7 +208,7 @@ class Path{
         this.path.map(function(shape){
             let d=shape.getAttribute("d");
             let sd=ref.scale(dx,dy,d,handle);
-            if(sd==false || !willUpdate) {willUpdate=false;return;}
+            if(sd==false ||!willUpdate||sd.match(NaN)!=null||sd.match(Infinity)!=null) {willUpdate=false;return;}
             allD.push(sd);
         });
         if(willUpdate) ref.updatePath(allD);
@@ -222,7 +226,7 @@ class Path{
         if(!Array.isArray(d)) segs=parse(d);
         if(segs==false){
             console.warn("Can't parse!");
-            return;
+            return false;
         }
         let bbox=this.getHookerElement().getBBox();
         let w=bbox.width;
@@ -231,10 +235,8 @@ class Path{
         let y=bbox.y;
         Object.keys(segs).forEach(function(idx){
             let segType=segs[idx][0].toLowerCase();
-            //d+=segs[idx][0];
             let px=segs[idx][0]>='A'&&segs[idx][0]<='Z'?x:0;
             let py=segs[idx][0]>='A'&&segs[idx][0]<='Z'?y:0;
-            //console.log(px,py);
             if(segType=='a'){
                 segs[idx][1]=px+(segs[idx][1]-px)*(1-dx/w);
                 segs[idx][2]=py+(segs[idx][2]-py)*(1-dy/h);
@@ -290,9 +292,9 @@ class Path{
                 dy*=-1;
                 break;
         }
+        let pch=this.createPlaceholder(serialize(segs)).getBBox();
+        if(pch.width<4||pch.height<4) return false;
         let pathData=this.move(dx,dy,segs);
-        let pch=this.createPlaceholder(pathData).getBBox();
-        if(pch.width<3||pch.height<3) return false;
         return pathData;
     }
     
@@ -302,8 +304,7 @@ class Path{
      * @param {Number} dy Shift along y axis.
      */
     moveAll(dx,dy){
-        this.removeHandles();
-        this.selected(false);
+        this.selected(true);
         let ref=this;
         let allD=[];
         this.path.map(function(shape){
@@ -312,6 +313,8 @@ class Path{
             allD.push(sd);
         });
         ref.updatePath(allD);
+        if(this.isHandleAllowed==false) this.removeHandles();
+        this.scaleAdapter.showHandles();
     }
     /**
      * moveAll will move specific path string to a new position along x and y axis.
@@ -379,6 +382,11 @@ class Path{
             this.canvas.insertBefore(this.getHookerElement().nextElementSibling,this.getHookerElement());
     }
 
+    /**
+     * Add event listener.
+     * @param {string} name name of the event
+     * @param {Function} fn Callback function.
+     */
     addEventListener(name,fn){
         if(this.events[name]==undefined) this.events[name]=[];
         if(!Array.isArray(fn)){
@@ -389,6 +397,10 @@ class Path{
             ref.events[name].push(f);
         })
     }
+    /**
+     * Call an event.
+     * @param {string} name Event name.
+     */
     callEvents(name){
         if(this.events[name]==undefined) this.events[name]=[];
         let ref=this;

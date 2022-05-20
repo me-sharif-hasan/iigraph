@@ -29,7 +29,7 @@
 
         // overloaded moveTo
         if (type == 'm' && args.length > 2) {
-            data.push([command].concat(args.splice(0, 2)))
+            data.push([command].concat(args.splice(0, 2)));
             type = 'l'
             command = command == 'm' ? 'l' : 'L'
         }

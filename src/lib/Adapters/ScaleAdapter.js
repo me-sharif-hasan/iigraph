@@ -11,11 +11,20 @@ class ScaleAdapter{
     }
     __init__(){
         let ref=this;
-        $(window).on("click",function(e){
-            if(e.target.parentNode.isEqualNode(ref.element)){
-                ref.showHandles();
-            }else if(ref.base.canvas.contains(e.target)){
+        $(this.base.getHookerElement()).on("click",function(e){
+            ref.showHandles();
+        });
+        $(this.base.canvas).on("mousedown",function(e){
+            if(!ref.base.getHookerElement().contains(e.target)&&e.target.dataset.handleof!=ref.base.name){
                 ref.base.removeHandles();
+            }
+            if(e.target.dataset.markerfor!=undefined){
+                if(JSON.parse(e.target.dataset.markerfor)[ref.base.name]){
+                    ref.base.selected(true);
+                }else{
+                    ref.base.selected(false);
+                }
+            }else{
                 ref.base.selected(false);
             }
         });
@@ -83,6 +92,7 @@ class ScaleAdapter{
         this.base.addParameter("r",4,circle);
         this.base.addParameter("class","handle-circle",circle);
         this.base.addParameter("data-handleid",id,circle);  
+        this.base.addParameter("data-handleof",this.base.name,circle);  
         this.base.addParameter("style","cursor:"+this.cursorDecider(id)+";",circle);
         return circle;
     }
@@ -94,7 +104,7 @@ class ScaleAdapter{
         let sy=e.difference.y;
         switch(handle){
             case "0":
-                e.data.base.scaleAll(-sy,-sy,handle);
+                e.data.base.scaleAll(-sx,-sy,handle);
             break;
             case "1":
                 e.data.base.scaleAll(-sx,0,handle);
