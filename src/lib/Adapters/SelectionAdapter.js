@@ -63,6 +63,11 @@ class SelectionAdapter{
         return shapes;
     }
 
+    /**
+     * getSelectionBounds take a shaps are return combined bounding box.
+     * @param {Path[]} shapes Shape.
+     * @returns return Object.
+     */
     getSelectionBounds(shapes){
         let xm=9999999999,xM=0;
         let ym=9999999999,yM=0;

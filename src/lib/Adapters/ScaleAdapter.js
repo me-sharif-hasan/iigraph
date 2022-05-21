@@ -15,8 +15,9 @@ class ScaleAdapter{
             ref.showHandles();
         });
         $(this.base.canvas).on("mousedown",function(e){
-            if(!ref.base.getHookerElement().contains(e.target)&&e.target.dataset.handleof!=ref.base.name){
+            if(!ref.base.getHookerElement().contains(e.target)&&e.target.dataset.markerfor==undefined&&e.target.dataset.handleof==undefined){
                 ref.base.removeHandles();
+                ref.base.selected(false);
             }
             if(e.target.dataset.markerfor!=undefined){
                 if(JSON.parse(e.target.dataset.markerfor)[ref.base.name]){
@@ -24,7 +25,7 @@ class ScaleAdapter{
                 }else{
                     ref.base.selected(false);
                 }
-            }else{
+            }else if(e.target.dataset.handleof!=ref.base.name){
                 ref.base.selected(false);
             }
         });

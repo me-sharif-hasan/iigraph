@@ -182,7 +182,7 @@ class Path{
     /**
      * strokeWidth will set the stroke width to the shape.
      * @param {Number} width Stroke width.
-     * @param {Integer} idx Index of shape in the composition. Can be undefined.
+     * @param {Integer?} idx Index of shape in the composition. Can be undefined.
      */
     strokeWidth(width,idx){
         let ref=this;

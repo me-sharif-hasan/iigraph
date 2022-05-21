@@ -27,6 +27,9 @@ class Factory{
             case "cloud":
                 shape=new Cloud(this.canvas);
             break;
+            case "isotherm":
+                shape=new Isotherm(this.canvas);
+            break;
         }
         let ref=this;
         Object.keys(this.events).forEach(function(name){
