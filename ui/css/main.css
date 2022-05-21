@@ -24,6 +24,13 @@
 body{
     margin: 0 auto;
 }
+a{
+    text-decoration: none;
+    color: rgb(0, 132, 255);
+}
+a:hover{
+    color: rgb(0, 106, 192);
+}
 .hidden{
     display: none;
 }
