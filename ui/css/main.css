@@ -2,6 +2,11 @@
     --sidebar_width: 17%;
     --navigationbar_height: 54px;
     --move_icon: url(icons/move.png);
+    --navy_blue: #05445e;
+    --blue_grotto: #189ab4;
+    --blue_green: #75e6da;
+    --baby_blue: #d4f1f4;
+    --white: #fff;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 @keyframes grow {
@@ -81,7 +86,7 @@ a:hover{
 }
 .navigation ul li{
     padding: 8px;
-    padding: 3px 5px 2px 5px;
+    padding: 3px 10px 2px 0;
     cursor: pointer;
     border-radius: 4px;
     transition: .3s;

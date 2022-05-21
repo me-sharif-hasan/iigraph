@@ -1,6 +1,6 @@
 
 <table>
-<tr><td><img src="https://raw.githubusercontent.com/me-sharif-hasan/iigraph/main/logo.svg" width="200" height="200"></td><td>
+<tr><td><img src="https://raw.githubusercontent.com/me-sharif-hasan/iigraph/main/logo.svg" width="400"></td><td>
 
 # iiGraph-visual flowchart design and animation.
 
