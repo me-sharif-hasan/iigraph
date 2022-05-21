@@ -19,13 +19,13 @@ class ScaleAdapter{
                 ref.base.removeHandles();
                 ref.base.selected(false);
             }
-            if(e.target.dataset.markerfor!=undefined){
+            if(e.target.dataset.markerfor!=undefined&&!ref.base.getHookerElement().contains(e.target)){
                 if(JSON.parse(e.target.dataset.markerfor)[ref.base.name]){
                     ref.base.selected(true);
                 }else{
                     ref.base.selected(false);
                 }
-            }else if(e.target.dataset.handleof!=ref.base.name){
+            }else if(e.target.dataset.handleof!=ref.base.name&&!ref.base.getHookerElement().contains(e.target)){
                 ref.base.selected(false);
             }
         });
@@ -99,6 +99,10 @@ class ScaleAdapter{
     }
 
     dragHandler(e){
+        if(!e.data.base.canvas.contains(e.mousemove.target)){
+            document.body.style.cursor="default";
+            return;
+        }
         let handle=e.mousedown.target.getAttribute("data-handleid");
         document.body.style.cursor=e.data.cursorDecider(handle*1);
         let sx=e.difference.x;

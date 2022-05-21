@@ -362,8 +362,9 @@ class Path{
         if(value!=undefined){
             let temp=this.isSelected;
             this.isSelected=value;
-            if(temp!=value) 
+            if(temp!=value){
                 this.callEvents("select");
+            }
         }
         return this.isSelected;
     }
