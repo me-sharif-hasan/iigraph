@@ -1,6 +1,7 @@
 
-<table border="0">
+<table>
 <tr><td><img src="https://raw.githubusercontent.com/me-sharif-hasan/iigraph/main/logo.svg" width="200" height="200"></td><td>
+
 # iiGraph-visual flowchart design and animation.
 
 This project is aimed to those who are missing a free tool where they can animate a flowchart easily with a timeline feature.
