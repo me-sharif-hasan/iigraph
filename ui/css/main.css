@@ -1,7 +1,7 @@
 :root{
     --sidebar_width: 17%;
     --navigationbar_height: 54px;
-    --move_icon: url(/ui/css/icons/move.png);
+    --move_icon: url(icons/move.png);
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 @keyframes grow {
