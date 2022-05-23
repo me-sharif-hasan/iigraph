@@ -79,6 +79,16 @@
             </div>
         </div>
     </div>
+
+
+    <div id="color-picker" data-hidecolorpicker="false">
+        <div id="color-picker-head" data-hidecolorpicker="false" align="center">Pick a color</div>
+        <canvas id="color-block" height="350" width="350" data-hidecolorpicker="false"></canvas>
+        <canvas id="color-strip" height="350" width="30" data-hidecolorpicker="false"></canvas>
+        <span data-hidecolorpicker="false" id="color-indicator-1"></span>
+        <span data-hidecolorpicker="false" id="color-indicator-2"></span>
+    </div>
+
     <script type="text/javascript" src="src/lib/Path.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Circle.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Heart.js"></script>
@@ -89,6 +99,7 @@
     <script type="text/javascript" src="src/lib/Adapters/MoveAdapter.js"></script>
     <script type="text/javascript" src="src/lib/MouseActionManager/iimice.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/SelectionAdapter.js"></script>
+    <script type="text/javascript" src="src/Utility/ColorPicker.js"></script>
 
     <script type="text/javascript" src="src/PathParser.js"></script>
     <script type="text/javascript" src="src/Factory.js"></script>
@@ -111,7 +122,14 @@
             if(shape.selected()){
                 let elm=null;
                 if(document.getElementById(id)==undefined){
-                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title">Fill '+shape.name+'</div><div class="shape-fill-color"></div></div>');
+                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title">Fill '+shape.name+'</div><div class="shape-fill-color" data-hidecolorpicker="false"></div></div>');
+                    $(elm.childNodes[1]).on("click",function(e){
+                        toggleColorPicker(true,function(color){
+                            elm.childNodes[1].style.background=color;
+                            shape.fill(color);
+                        });
+                    });
+
                     document.getElementById("fill").appendChild(elm);
                 }else{
                     elm=document.getElementById(id);
@@ -122,7 +140,7 @@
                     document.getElementById(id).remove();
                 }
             }
-        })
+        });
 
         function htmlToElement(html) {
             var template = document.createElement('template');

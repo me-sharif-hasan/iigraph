@@ -85,11 +85,13 @@ a:hover{
     padding: 0;
 }
 .navigation ul li{
-    padding: 8px;
-    padding: 3px 10px 2px 0;
+    padding: 3px 5px 2px 5px;
     cursor: pointer;
     border-radius: 4px;
     transition: .3s;
+}
+.navigation ul li:first-child{
+    padding-left: 0;
 }
 .navigation ul li:hover{
     background: #eee;
@@ -240,3 +242,43 @@ animation-iteration-count: infinite;
     border: 1px dotted black;
     cursor: pointer;
 }
+
+/** Color picker*/
+  #color-picker {
+    position: absolute;
+    left: 70px; 
+    background-color: white;
+    height: 350px;
+    width: 385px;
+    border: solid 1px #ccc;
+    top: 100px;
+    left: 400px;
+    padding: 5px;
+    display: none;
+  }
+  #color-picker-head{
+    background: var(--blue_grotto);
+    width: 100%;
+    user-select: none;
+    cursor: move;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 3px 3px 3px;
+  }
+  #color-strip{
+      float: right;
+  }
+  canvas:hover {
+    cursor: crosshair;
+  }
+  #color-indicator-1,#color-indicator-2{
+    width: 10px;
+    height: 10px;
+    display: block;
+    background: white;
+    border-radius: 100%;
+    box-shadow: 0 0 3px black;
+  }
+
+/*End*/
