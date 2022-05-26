@@ -41,6 +41,7 @@ class iimise{
     createDragEvent(functionName,flag,data){
         let ref=this;
         this.on("mousedown",function(mousedown){
+            if(mousedown.buttons!=1) return;
             let dragEvent={};
             dragEvent["mousedown"]=mousedown;
             dragEvent["dragstart"]={"x":mousedown.clientX,"y":mousedown.clientY};

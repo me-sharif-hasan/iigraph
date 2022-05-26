@@ -33,7 +33,6 @@ class Factory{
             break;
             case "finger":
                 shape=new Finger(this.canvas);
-                console.log(shape);
             break;
         }
         let ref=this;
