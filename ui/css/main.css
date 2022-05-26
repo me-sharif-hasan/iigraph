@@ -1,14 +1,19 @@
 :root{
     --sidebar_width: 17%;
-    --navigationbar_height: 54px;
+    --navigationbar_height: 66px;
     --move_icon: url(icons/move.png);
-    --navy_blue: #05445e;
-    --blue_grotto: #189ab4;
-    --blue_green: #75e6da;
-    --baby_blue: #d4f1f4;
-    --white: #fff;
+    --label: #264653;
+    --links: #189ab4;
+    --icons: #2a9d8f;
+    --shadow: #f4a261;
+    --error: #e76f51;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+@font-face {
+    font-family: title;
+    src: url(fonts/Pacifico.ttf);
+}
+
 @keyframes grow {
     from{
         max-height: 0px;
@@ -68,12 +73,16 @@ a:hover{
 }
 .header{
     display: inline-flex;
+    height: 100%;
 }
 .navigation .title h3{
     margin: 0;
     font-weight: normal;
     cursor: default;
     user-select: none;
+    line-height: 1;
+    font-size: 1.6em;
+    font-family: title;
 }
 .navigation{
     padding: 5px 3px 3px 12px;
@@ -81,7 +90,7 @@ a:hover{
 .navigation ul{
     display: flex;
     list-style: none;
-    margin: 0;
+    margin: 11px 0 0 0;
     padding: 0;
 }
 .navigation ul li{
@@ -118,10 +127,11 @@ a:hover{
     margin: 0;
     display: block;
     user-select: none;
+    color: var(--label);
 }
 .drop .title::before{
     content: "";
-    border-left: 9px solid black;
+    border-left: 9px solid var(--icons);
     border-bottom: 6px solid transparent;
     border-top: 6px solid transparent;
     display: block;
@@ -237,54 +247,3 @@ animation-iteration-count: infinite;
     border: 1px dotted black;
     cursor: pointer;
 }
-
-/** Color picker*/
-  #color-picker {
-    position: absolute;
-    left: 70px; 
-    background-color: white;
-    height: 404px;
-    width: 385px;
-    border: solid 1px #ccc;
-    top: 100px;
-    left: 400px;
-    padding: 5px;
-    display: none;
-    z-index: 1000;
-    transition: .3s;
-    overflow: hidden;
-  }
-  #color-picker-head{
-    background: var(--blue_grotto);
-    width: 100%;
-    user-select: none;
-    cursor: move;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin: 0 3px 3px 3px;
-  }
-  #color-strip{
-      float: right;
-  }
-  canvas:hover {
-    cursor: crosshair;
-  }
-  #color-indicator-1,#color-indicator-2{
-    width: 10px;
-    height: 10px;
-    display: block;
-    background: white;
-    border-radius: 100%;
-    box-shadow: 0 0 3px black;
-    position: absolute;
-    top: -20;
-    cursor: crosshair;
-  }
-
-
-  .no-transition{
-      transition: none !important;
-  }
-
-/*End*/
