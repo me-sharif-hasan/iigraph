@@ -94,8 +94,12 @@ $(window).on("click",function(e){
 let colorPickerHead=document.getElementById("color-picker-head");
 $(colorPickerHead).on("drag",function(e){
     if(e.mousemove!=undefined){
+       colorPicker.classList.add("no-transition");
        let p=colorPickerHead.parentNode;
        p.style.top=p.offsetTop-e.difference.y+"px";
        p.style.left=p.offsetLeft-e.difference.x+"px";
+    }
+    if(e.mouseup!=undefined){
+        colorPicker.classList.remove("no-transition");
     }
 });

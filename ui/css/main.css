@@ -256,6 +256,7 @@ animation-iteration-count: infinite;
     padding: 5px;
     display: none;
     z-index: 1000;
+    transition: .3s;
   }
   #color-picker-head{
     background: var(--blue_grotto);
@@ -280,6 +281,10 @@ animation-iteration-count: infinite;
     background: white;
     border-radius: 100%;
     box-shadow: 0 0 3px black;
+  }
+
+  .no-transition{
+      transition: none !important;
   }
 
 /*End*/
