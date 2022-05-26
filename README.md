@@ -59,3 +59,7 @@ If you have any feedback, please reach out to us at me.sharif.hasan@gmail.com
 
 - [Sharif Hasan](https://www.github.com/me-sharif-hasan)
 
+## Third party libs
+
+- [Coloris colorpicker](https://github.com/mdbassit/Coloris)
+

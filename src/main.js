@@ -14,23 +14,41 @@ let canvas=document.getElementById("canvas");
         });
         $(factory).on("select",function(shape){
             let id=shape.name;
+            let primaryColor=shape.getFillColor();
             if(shape.selected()){
                 let elm=null;
                 if(document.getElementById(id)==undefined){
-                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title">'+shape.name+'</div><div class="shape-fill-color" data-hidecolorpicker="false"></div></div>');
+                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title" align="center">'+shape.name+'</div><input type=text class="shape-fill-color" data-hidecolorpicker="false" data-coloris></input></div>');
+                    elm.childNodes[1].value=primaryColor;
+                    elm.childNodes[1].style.background=primaryColor;
                     $(elm.childNodes[1]).on("click",function(e){
-                        let bbox=shape.getBBox();
-                        toggleColorPicker(true,function(color){
-                            elm.childNodes[1].style.background=color;
-                            shape.fill(color);
-                        },bbox.x+bbox.width+5,bbox.y-3);
+                        Coloris({  
+                            swatches: [
+                            '#264653',
+                            '#2a9d8f',
+                            '#e9c46a',
+                            'rgb(244,162,97)',
+                            '#e76f51',
+                            '#d62828',
+                            'navy',
+                            '#07b',
+                            '#0096c7',
+                            '#00b4d880',
+                            'rgba(0,119,182,0.8)'
+                          ],
+                          defaultColor: '#00ff00'
+                        });
+                        $(elm.childNodes[1]).on("input",function(e){
+                            shape.fill(e.target.value);
+                            elm.childNodes[1].style.background=e.target.value;
+                        });
                     });
 
                     document.getElementById("fill").appendChild(elm);
                 }else{
                     elm=document.getElementById(id);
                 }
-                elm.childNodes[1].style.background=shape.getFillColor();
+               // elm.childNodes[1].style.background=primaryColor;
             }else{
                 if(document.getElementById(id)!=undefined){
                     document.getElementById(id).remove();

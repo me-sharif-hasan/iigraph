@@ -34,6 +34,9 @@ class Factory{
             case "finger":
                 shape=new Finger(this.canvas);
             break;
+            case "rightangle-triangle":
+                shape=new RightAngleTriangle(this.canvas);
+            break;
         }
         let ref=this;
         Object.keys(this.events).forEach(function(name){
