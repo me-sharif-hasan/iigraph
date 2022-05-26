@@ -18,9 +18,6 @@ class Factory{
             case "heart":
                 shape=new Heart(this.canvas);
             break;
-            case "rect":
-                shape=new Rect(this.canvas);
-            break;
             case "human":
                 shape=new Human(this.canvas);
             break;
@@ -29,6 +26,14 @@ class Factory{
             break;
             case "isotherm":
                 shape=new Isotherm(this.canvas);
+            break;
+            case "rect":
+                shape=new Rectangle(this.canvas);
+                console.log(shape);
+            break;
+            case "finger":
+                shape=new Finger(this.canvas);
+                console.log(shape);
             break;
         }
         let ref=this;

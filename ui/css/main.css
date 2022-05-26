@@ -207,17 +207,18 @@ animation-iteration-count: infinite;
 }
 
 .button-type-1{
-    width: 40px;
+    width: 33%;
     padding: 0 15px 0 15px;
-    background: #c4c4c4;
+    background: #fff;
     border-radius: 11px;
-    box-shadow: 0 0 3px;
     margin-right: 8px;
+    height: 27px;
+    transition: .2s;
 }
 
 .button-type-1:hover{
     background: #fff;
-    box-shadow: 0 0 5px black;
+    box-shadow: 0 0 14px rgb(212, 212, 212);
 }
 
 #fill div{

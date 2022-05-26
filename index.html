@@ -33,8 +33,7 @@
                     <div class="subholder">
                     <input type="image" name="circle" src="ui/icons/circle.svg" class="shape-icon"/>
                     <input type="image" name="isotherm" src="ui/icons/iso-triange.svg" class="shape-icon"/>
-                    <input type="image" name="square" src="ui/icons/square.svg" class="shape-icon"/>
-                    <input type="image" name="90deg-triangle" src="ui/icons/90deg-triangle.svg" class="shape-icon"/>
+                    <input type="image" name="rightangle-triangle" src="ui/icons/rightangle.svg" class="shape-icon"/>
                     <input type="image" name="rect" src="ui/icons/rect.svg" class="shape-icon"/>
                     </div>
                 </div>
@@ -48,6 +47,7 @@
                     <input type="image" name="heart" src="ui/icons/heart.svg" class="shape-icon"/>
                     <input type="image" name="cloud" src="ui/icons/cloud.svg" class="shape-icon"/>
                     <input type="image" name="human" src="ui/icons/actor.svg" class="shape-icon"/>
+                    <input type="image" name="finger" src="ui/icons/finger.svg" class="shape-icon"/>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
         <div class="right-sidebar">
             <div class="drop">
                 <input type="checkbox" class="hidden toggler" id="shape-position-switch" checked>
-                <label for="shape-position-switch" class="title">Layer position</label>
+                <label for="shape-position-switch" class="title">Stack</label>
                 <div class="holder">
                     <div class="positioner subholder">
                         <input class="button-type-1 " id="shape-to-back" type="image" src="ui/icons/sendback.svg"/>
@@ -79,7 +79,7 @@
             </div>
             <div class="drop">
                 <input type="checkbox" class="hidden toggler" id="shape-color-switch" checked>
-                <label for="shape-color-switch" class="title">Fill and stroke</label>
+                <label for="shape-color-switch" class="title">Fill</label>
                 <div class="holder">
                     <div class="color subholder">
                         <div id="fill"></div>
@@ -94,62 +94,16 @@
     <script type="text/javascript" src="src/lib/Shapes/Heart.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Human.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Cloud.js"></script>
+    <script type="text/javascript" src="src/lib/Shapes/Finger.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Isotherm.js"></script>
+    <script type="text/javascript" src="src/lib/Shapes/Rectangle.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/ScaleAdapter.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/MoveAdapter.js"></script>
     <script type="text/javascript" src="src/lib/MouseActionManager/iimice.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/SelectionAdapter.js"></script>
     <script type="text/javascript" src="src/Utility/ColorPicker.js"></script>
-
-    <script type="text/javascript" src="src/PathParser.js"></script>
-    <script type="text/javascript" src="src/Factory.js"></script>
-    <script>
-        let canvas=document.getElementById("canvas");
-        let factory=new Factory(canvas);
-        let icns=document.getElementsByClassName("shape-icon");
-        Object.keys(icns).forEach(function(e){
-            $(icns[e]).on("click",function(x){
-                factory.create(x.target.name);
-            });
-        });
-        $(document.getElementById("shape-to-back")).on("click",function(e){
-            factory.selectedGoBack();
-        });
-        $(document.getElementById("shape-to-front")).on("click",function(e){
-            factory.selectedComeFront();
-        });
-        $(factory).on("select",function(shape){
-            let id=shape.name;
-            if(shape.selected()){
-                let elm=null;
-                if(document.getElementById(id)==undefined){
-                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title">Fill '+shape.name+'</div><div class="shape-fill-color" data-hidecolorpicker="false"></div></div>');
-                    $(elm.childNodes[1]).on("click",function(e){
-                        let bbox=shape.getBBox();
-                        toggleColorPicker(true,function(color){
-                            elm.childNodes[1].style.background=color;
-                            shape.fill(color);
-                        },bbox.x+bbox.width+5,bbox.y-3);
-                    });
-
-                    document.getElementById("fill").appendChild(elm);
-                }else{
-                    elm=document.getElementById(id);
-                }
-                elm.childNodes[1].style.background=shape.getFillColor();
-            }else{
-                if(document.getElementById(id)!=undefined){
-                    document.getElementById(id).remove();
-                }
-            }
-        });
-
-        function htmlToElement(html) {
-            var template = document.createElement('template');
-            html = html.trim(); // Never return a text node of whitespace as the result
-            template.innerHTML = html;
-            return template.content.firstChild;
-        }
-    </script>
+    <script type="text/javascript" src="src/lib/PathParser.js"></script>
+    <script type="text/javascript" src="src/lib/Factory.js"></script>
+    <script type="text/javascript" src="src/main.js"></script>
     </body>
 </html>

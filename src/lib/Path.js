@@ -1,9 +1,11 @@
 class Path{
     events={};
-    static id=0;
+    static id=1;
+    static objectWiseId=[];
     constructor(canvas){
         Path.id++;
-        this.name=this.constructor.name+" "+Path.id;
+        Path.objectWiseId[this.constructor.name]=(Path.objectWiseId[this.constructor.name]==undefined?1:Path.objectWiseId[this.constructor.name]+1);
+        this.name=this.constructor.name+" "+Path.objectWiseId[this.constructor.name];
         this.canvas=canvas;
         this.__init__();
         this.addScaleAdapter(this.group);
@@ -94,7 +96,7 @@ class Path{
     }
     createPlaceholder(d,pathId){
         if(this.placeholder==undefined){
-            this.placeholder={};
+            this.placeholder=[];
         }
         if(this.placeholder[pathId]==undefined){
             this.placeholder[pathId]=this.createSVGElement("path");
@@ -105,7 +107,9 @@ class Path{
         return this.placeholder[pathId];
     }
     removePlaceholder(){
-        if(this.placeholder!=undefined) this.placeholder.remove();
+        if(this.placeholder!=undefined) this.placeholder.map(function(elm){
+            elm.remove();
+        })
         this.placeholder=undefined;
     }
     
