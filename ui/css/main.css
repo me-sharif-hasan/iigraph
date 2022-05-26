@@ -248,13 +248,14 @@ animation-iteration-count: infinite;
     position: absolute;
     left: 70px; 
     background-color: white;
-    height: 350px;
+    height: 370px;
     width: 385px;
     border: solid 1px #ccc;
     top: 100px;
     left: 400px;
     padding: 5px;
     display: none;
+    z-index: 1000;
   }
   #color-picker-head{
     background: var(--blue_grotto);

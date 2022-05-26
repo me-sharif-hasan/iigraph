@@ -55,7 +55,16 @@
         </div>
         <div class="drawing-area">
             <svg style="width: 100%;height: 100%;" id="canvas">
-            </svg>          
+            </svg> 
+            
+        <div id="color-picker" data-hidecolorpicker="false">
+            <div id="color-picker-head" data-hidecolorpicker="false" align="center">Pick a color</div>
+            <canvas id="color-block" height="350" width="350" data-hidecolorpicker="false"></canvas>
+            <canvas id="color-strip" height="350" width="30" data-hidecolorpicker="false"></canvas>
+            <span data-hidecolorpicker="false" id="color-indicator-1"></span>
+            <span data-hidecolorpicker="false" id="color-indicator-2"></span>
+        </div>
+
         </div>
         <div class="right-sidebar">
             <div class="drop">
@@ -80,15 +89,6 @@
         </div>
     </div>
 
-
-    <div id="color-picker" data-hidecolorpicker="false">
-        <div id="color-picker-head" data-hidecolorpicker="false" align="center">Pick a color</div>
-        <canvas id="color-block" height="350" width="350" data-hidecolorpicker="false"></canvas>
-        <canvas id="color-strip" height="350" width="30" data-hidecolorpicker="false"></canvas>
-        <span data-hidecolorpicker="false" id="color-indicator-1"></span>
-        <span data-hidecolorpicker="false" id="color-indicator-2"></span>
-    </div>
-
     <script type="text/javascript" src="src/lib/Path.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Circle.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Heart.js"></script>
@@ -104,8 +104,9 @@
     <script type="text/javascript" src="src/PathParser.js"></script>
     <script type="text/javascript" src="src/Factory.js"></script>
     <script>
-        let factory=new Factory(document.getElementById("canvas"));
-        let icns=document.getElementsByClassName("shape-icon")
+        let canvas=document.getElementById("canvas");
+        let factory=new Factory(canvas);
+        let icns=document.getElementsByClassName("shape-icon");
         Object.keys(icns).forEach(function(e){
             $(icns[e]).on("click",function(x){
                 factory.create(x.target.name);
@@ -124,10 +125,11 @@
                 if(document.getElementById(id)==undefined){
                     elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title">Fill '+shape.name+'</div><div class="shape-fill-color" data-hidecolorpicker="false"></div></div>');
                     $(elm.childNodes[1]).on("click",function(e){
+                        let bbox=shape.getBBox();
                         toggleColorPicker(true,function(color){
                             elm.childNodes[1].style.background=color;
                             shape.fill(color);
-                        });
+                        },bbox.x+bbox.width+5,bbox.y-3);
                     });
 
                     document.getElementById("fill").appendChild(elm);

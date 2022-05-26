@@ -21,6 +21,9 @@ class Path{
         this.group=this.createSVGElement("g");
         this.canvas.append(this.group);
     }
+    getBBox(){
+        return this.getHookerElement().getBBox();
+    }
     allowHandle(flag){
         this.isHandleAllowed=flag;
     }
@@ -211,7 +214,9 @@ class Path{
             if(sd==false ||!willUpdate||sd.match(NaN)!=null||sd.match(Infinity)!=null) {willUpdate=false;return;}
             allD.push(sd);
         });
-        if(willUpdate) ref.updatePath(allD);
+        if(willUpdate){
+            ref.updatePath(allD);
+        }
     }
     /**
      * scale method will scale a path provided by d parameter.
@@ -221,6 +226,7 @@ class Path{
      * @param {Integer} handle 
      * @returns Scalled path string.
      */
+    previousPath=undefined;
     scale(dx,dy,d,handle){
         let segs=d;
         if(!Array.isArray(d)) segs=parse(d);
@@ -233,6 +239,35 @@ class Path{
         let h=bbox.height;
         let x=bbox.x;
         let y=bbox.y;
+        if(w<6||h<6){
+            return this.previousPath;
+        }
+        this.previousPath=d;
+        let ref=this;
+        function shiftx(dx){
+            let t=ref.handle["circles"][1].getAttribute("cx")*1;
+            let c=ref.handle["circles"][5].getAttribute("cx")*1;
+            let tx=(t)*(1-dx/w);
+            let tc=(c)*(1-dx/w);
+            if(tx>tc){
+                return false;
+            }
+            return true;
+        }
+        if(!shiftx(dx)) return false;
+
+        function shifty(dy){
+            let t=ref.handle["circles"][7].getAttribute("cy")*1;
+            let c=ref.handle["circles"][3].getAttribute("cy")*1;
+            let tx=(t)*(1-dy/h);
+            let tc=(c)*(1-dy/h);
+            if(tx>tc){
+                return false;
+            }
+            return true;
+        }
+        if(!shifty(dy)) return false;
+
         Object.keys(segs).forEach(function(idx){
             let segType=segs[idx][0].toLowerCase();
             let px=segs[idx][0]>='A'&&segs[idx][0]<='Z'?x:0;
@@ -292,8 +327,6 @@ class Path{
                 dy*=-1;
                 break;
         }
-        let pch=this.createPlaceholder(serialize(segs)).getBBox();
-        if(pch.width<4||pch.height<4) return false;
         let pathData=this.move(dx,dy,segs);
         return pathData;
     }

@@ -64,9 +64,11 @@ function changeColor(e) {
   if(callback!=undefined) callback(rgbaColor);
 }
 
-function toggleColorPicker(flag,callbackfn){
+function toggleColorPicker(flag,callbackfn,x,y){
     if(flag){
         colorPicker.style.display="block";
+        colorPicker.style.left=x+"px";
+        colorPicker.style.top=y+"px";
         callback=callbackfn;
     }else{
         colorPicker.style.display="none";
