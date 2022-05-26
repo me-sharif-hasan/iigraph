@@ -92,14 +92,17 @@ class Path{
             return this.path;
         }
     }
-    createPlaceholder(d){
+    createPlaceholder(d,pathId){
         if(this.placeholder==undefined){
-            this.placeholder=this.createSVGElement("path");
-            this.canvas.append(this.placeholder);
+            this.placeholder={};
         }
-        this.addParameter("d",d,this.placeholder);
-        this.addParameter("style","visibility:hidden;",this.placeholder);
-        return this.placeholder;
+        if(this.placeholder[pathId]==undefined){
+            this.placeholder[pathId]=this.createSVGElement("path");
+            this.canvas.append(this.placeholder[pathId]);
+        }
+        this.addParameter("d",d,this.placeholder[pathId]);
+        this.addParameter("style","visibility:hidden;",this.placeholder[pathId]);
+        return this.placeholder[pathId];
     }
     removePlaceholder(){
         if(this.placeholder!=undefined) this.placeholder.remove();
@@ -208,9 +211,9 @@ class Path{
         let ref=this;
         let allD=[];
         let willUpdate=true;
-        this.path.map(function(shape){
+        this.path.map(function(shape,idx){
             let d=shape.getAttribute("d");
-            let sd=ref.scale(dx,dy,d,handle);
+            let sd=ref.scale(dx,dy,d,handle,idx);
             if(sd==false ||!willUpdate||sd.match(NaN)!=null||sd.match(Infinity)!=null) {willUpdate=false;return;}
             allD.push(sd);
         });
@@ -227,7 +230,7 @@ class Path{
      * @returns Scalled path string.
      */
     previousPath=undefined;
-    scale(dx,dy,d,handle){
+    scale(dx,dy,d,handle,pathId){
         let segs=d;
         if(!Array.isArray(d)) segs=parse(d);
         if(segs==false){
@@ -239,9 +242,6 @@ class Path{
         let h=bbox.height;
         let x=bbox.x;
         let y=bbox.y;
-        if(w<6||h<6){
-            return this.previousPath;
-        }
         this.previousPath=d;
         let ref=this;
         function shiftx(dx){
@@ -328,6 +328,8 @@ class Path{
                 break;
         }
         let pathData=this.move(dx,dy,segs);
+        let b=this.createPlaceholder(pathData,pathId).getBBox();
+        if(b.width<1||b.height<1) return false;
         return pathData;
     }
     
