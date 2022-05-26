@@ -73,7 +73,7 @@ a:hover{
 }
 .header{
     display: inline-flex;
-    height: 100%;
+    height: 50%;
 }
 .navigation .title h3{
     margin: 0;
@@ -110,7 +110,7 @@ a:hover{
 }
 .logo{
     width: 50px;
-    height: 50px;
+    height: 65px;
 }
 .logo img{
     width: 100%;
