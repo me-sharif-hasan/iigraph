@@ -36,7 +36,8 @@ let canvas=document.getElementById("canvas");
                             '#00b4d880',
                             'rgba(0,119,182,0.8)'
                           ],
-                          defaultColor: '#00ff00'
+                          defaultColor: '#00ff00',
+                          format: "rgb"
                         });
                         $(elm.childNodes[1]).on("input",function(e){
                             shape.fill(e.target.value);
