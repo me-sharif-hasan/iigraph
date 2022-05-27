@@ -49,7 +49,6 @@ let canvas=document.getElementById("canvas");
                 }else{
                     elm=document.getElementById(id);
                 }
-               // elm.childNodes[1].style.background=primaryColor;
             }else{
                 if(document.getElementById(id)!=undefined){
                     document.getElementById(id).remove();

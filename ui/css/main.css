@@ -162,7 +162,7 @@ a:hover{
     width: 40px;
 }
 .holder .subholder{
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 
@@ -230,20 +230,25 @@ animation-iteration-count: infinite;
     width: 92%;
 }
 #fill .property-field{
-    padding: 3px 5px 2px 10px;
+    padding: 3px 5px 2px 3px;
     display: flex;
-    flex-wrap: wrap;
-    background: #eaeaea;
-    border-radius: 3px;
-    border: 1px solid #d9d9d9;
+    flex-wrap: nowrap;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    color: var(--label);
+    text-transform: uppercase;
 }
 #fill div .property-title{
-    width: 100%;
+    width: 60%;
+    line-break: anywhere;
+    padding: 0 10px 0 0;
+    box-sizing: border-box;
 }
 #fill div .shape-fill-color{
-    width: 100%;
+    width: 40%;
     height: 24px;
-    border-radius: 30px;
-    border: 1px dotted black;
+    border: 0;
     cursor: pointer;
+    box-shadow: 0 0 3px var(--shadow);
+    font-size: 1em;
 }

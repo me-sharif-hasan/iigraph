@@ -8,8 +8,18 @@ class Path{
         this.name=this.constructor.name+" "+Path.objectWiseId[this.constructor.name];
         this.canvas=canvas;
         this.__init__();
-        this.addScaleAdapter(this.group);
+        this.addScaleAdapter();
         this.addMoveAdapter();
+    }
+    addParent(parent){
+        let hooker=this.getHookerElement();
+        hooker.remove();
+        parent.append(this);
+        this.parent=parent;
+        parent.addChild(this);
+    }
+    addChild(shape){
+        this.child=shape;
     }
     /**
      * Create SVG element
@@ -21,7 +31,14 @@ class Path{
     }
     __init__(){
         this.group=this.createSVGElement("g");
-        this.canvas.append(this.group);
+        if(this.parent==undefined){
+            this.canvas.append(this.group);
+        }else{
+            this.parent.append(this);
+        }
+    }
+    append(shape){
+        this.getHookerElement().append(shape.getHookerElement());
     }
     getBBox(){
         return this.getHookerElement().getBBox();
@@ -34,7 +51,7 @@ class Path{
      * @param {JSON} handle JSON object with lines and circles
      */
     addHandles(handle){
-        if(this.handle!=undefined||this.isHandleAllowed==false) return;
+        if(this.handle!=undefined||this.isHandleAllowed==false||this.parent!=undefined) return;
         this.handle=handle;
         this.canvas.append(handle["lines"]);
         let ref=this;
@@ -140,10 +157,10 @@ class Path{
         }
     }
     addScaleAdapter(){
-        this.scaleAdapter=new ScaleAdapter(this.getHookerElement(),this);
+        this.scaleAdapter=new ScaleAdapter(this.getHookerGroup(),this);
     }
     addMoveAdapter(){
-        this.moveAdapter=new MoveAdapter(this.getHookerElement(),this);
+        this.moveAdapter=new MoveAdapter(this.getHookerGroup(),this);
     }
     /**
      * 
@@ -151,6 +168,13 @@ class Path{
      */
     getHookerElement(){
         return this.group;
+    }
+    getHookerGroup(){
+        let crntshape=this;
+        while(crntshape.parent!=undefined){
+            crntshape=crntshape.parent;
+        }
+        return crntshape.getHookerElement();
     }
 
     /* SVG related methods*/
@@ -180,12 +204,15 @@ class Path{
      * @param {Integer} idx Index of shape in the composition. Can be undefined.
      */
     stroke(color,idx){
+        if(this.strokes==undefined) this.strokes=[];
         let ref=this;
         if(idx==undefined){
-            this.path.forEach(function(shape){
+            this.path.map(function(shape,i){
+                ref.strokes[i]=color;
                 ref.addParameter("stroke",color,shape);
             });
         }else{
+            ref.strokes[idx]=color;
             ref.addParameter("stroke",color,this.path[idx]);
         }
     }
@@ -221,8 +248,16 @@ class Path{
             if(sd==false ||!willUpdate||sd.match(NaN)!=null||sd.match(Infinity)!=null) {willUpdate=false;return;}
             allD.push(sd);
         });
+        if(!willUpdate) return false;
+        if(this.child!=undefined){
+            let k=this.child.scaleAll(dx,dy,handle);
+            if(!k) return false;
+        }
         if(willUpdate){
             ref.updatePath(allD);
+            return true;
+        }else{
+            return false;
         }
     }
     /**
@@ -241,16 +276,17 @@ class Path{
             console.warn("Can't parse!");
             return false;
         }
-        let bbox=this.getHookerElement().getBBox();
+        let bbox=this.getHookerGroup().getBBox();
         let w=bbox.width;
         let h=bbox.height;
         let x=bbox.x;
         let y=bbox.y;
         this.previousPath=d;
         let ref=this;
+        let eBbox=this.getHookerElement().getBBox();
         function shiftx(dx){
-            let t=ref.handle["circles"][1].getAttribute("cx")*1;
-            let c=ref.handle["circles"][5].getAttribute("cx")*1;
+            let t=eBbox.x;
+            let c=eBbox.x+eBbox.width;
             let tx=(t)*(1-dx/w);
             let tc=(c)*(1-dx/w);
             if(tx>tc){
@@ -261,8 +297,8 @@ class Path{
         if(!shiftx(dx)) return false;
 
         function shifty(dy){
-            let t=ref.handle["circles"][7].getAttribute("cy")*1;
-            let c=ref.handle["circles"][3].getAttribute("cy")*1;
+            let t=eBbox.y
+            let c=eBbox.y+eBbox.height;
             let tx=(t)*(1-dy/h);
             let tc=(c)*(1-dy/h);
             if(tx>tc){
@@ -342,7 +378,8 @@ class Path{
      * @param {Number} dx Shift along x axis.
      * @param {Number} dy Shift along y axis.
      */
-    moveAll(dx,dy){
+    moveAll(dx,dy,force=false){
+        if(this.parent!=undefined&&force!=true) return;
         this.selected(true);
         let ref=this;
         let allD=[];
@@ -353,7 +390,8 @@ class Path{
         });
         ref.updatePath(allD);
         if(this.isHandleAllowed==false) this.removeHandles();
-        this.scaleAdapter.showHandles();
+        if(this.child!=undefined) this.child.moveAll(dx,dy,true);
+        if(this.parent==undefined) this.scaleAdapter.showHandles();
     }
     /**
      * moveAll will move specific path string to a new position along x and y axis.
@@ -404,6 +442,7 @@ class Path{
             if(temp!=value){
                 this.callEvents("select");
             }
+            if(this.child!=undefined) this.child.selected(value);
         }
         return this.isSelected;
     }
@@ -447,6 +486,11 @@ class Path{
         this.events[name].forEach(function(f){
             f(ref);
         })
+    }
+    
+    save(){
+        let saves=[];
+        saves["group"]=this.getHookerElement().toString();
     }
 
 }

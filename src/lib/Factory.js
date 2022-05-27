@@ -4,6 +4,13 @@ class Factory{
     constructor(canvas){
         this.canvas=canvas;
         this.selectionAdapter=new SelectionAdapter(this);
+        let ref=this;
+        $(window).on("group",function(e){
+            let s=ref.selectionAdapter.selectedShapes;
+            for(let i=1;i<s.length;i++){
+                s[i].addParent(s[i-1]);
+            }
+        });
     }
     /**
      * Create shape based on given name.

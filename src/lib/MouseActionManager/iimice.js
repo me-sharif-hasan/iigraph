@@ -11,6 +11,7 @@ class iimise{
      */
     on(eventName,functionName,flag,data){
         if(eventName=="drag") this.createDragEvent(functionName,flag,data);
+        if(eventName=="group") this.createGroupEvent(functionName,flag,data);
         this.element.addEventListener(eventName,functionName,flag);
         return this;
     }
@@ -70,6 +71,16 @@ class iimise{
 
             wmv.on("mouseup",mouseUpHandler,flag);
 
+        })
+    }
+
+    createGroupEvent(fn,flag,data){
+        $(window).on("keydown",function(e){
+            if(e.ctrlKey&&e.key.toUpperCase()=="G"){
+                e.preventDefault();
+                fn(e,data);
+                return false;
+            }
         })
     }
 }

@@ -15,6 +15,7 @@ class ScaleAdapter{
             ref.showHandles();
         });
         $(this.base.canvas).on("mousedown",function(e){
+            if(ref.base.getHookerGroup().contains(e.target)) return;
             if(!ref.base.getHookerElement().contains(e.target)&&e.target.dataset.markerfor==undefined&&e.target.dataset.handleof==undefined){
                 ref.base.removeHandles();
                 ref.base.selected(false);
@@ -32,7 +33,7 @@ class ScaleAdapter{
     }
 
     getBBox(){
-        return this.element.getBBox();
+        return this.base.getBBox();
     }
 
     showHandles(){
