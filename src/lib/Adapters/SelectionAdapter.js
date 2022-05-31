@@ -34,16 +34,20 @@ class SelectionAdapter{
         $(window).on("click",function(e){
             if(!ref.factory.canvas.contains(e.target)) return;
             if(ref.selectionMarker!=undefined){
-                ref.selectionMarker.remove();
-                ref.selectionMarker=undefined;
-                if(ref.selectedShapes!=undefined){
-                    ref.selectedShapes.forEach(function(shape){
-                        shape.selected(false);
-                        ref.selectedShapes=undefined;
-                    })
-                }
+                ref.deselect();
             }
         });
+    }
+    deselect(){
+        let ref=this;
+        ref.selectionMarker.remove();
+        ref.selectionMarker=undefined;
+        if(ref.selectedShapes!=undefined){
+            ref.selectedShapes.forEach(function(shape){
+                shape.selected(false);
+                ref.selectedShapes=undefined;
+            });
+        }
     }
 
     /**

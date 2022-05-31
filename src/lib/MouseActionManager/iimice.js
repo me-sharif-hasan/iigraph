@@ -11,9 +11,12 @@ class iimise{
      */
     on(eventName,functionName,flag,data){
         if(eventName=="drag") this.createDragEvent(functionName,flag,data);
-        if(eventName=="group") this.createGroupEvent(functionName,flag,data);
-        this.element.addEventListener(eventName,functionName,flag);
-        return this;
+        else if(eventName=="group") this.createGroupEvent(functionName,flag,data);
+        else if(eventName=="ungroup") this.createUngroupGroupEvent(functionName,flag,data);
+        else{
+            this.element.addEventListener(eventName,functionName,flag);
+            return this;
+        }
     }
 
     /**
@@ -76,7 +79,16 @@ class iimise{
 
     createGroupEvent(fn,flag,data){
         $(window).on("keydown",function(e){
-            if(e.ctrlKey&&e.key.toUpperCase()=="G"){
+            if(e.ctrlKey&&e.key.toUpperCase()=="G"&&!e.shiftKey){
+                e.preventDefault();
+                fn(e,data);
+                return false;
+            }
+        })
+    }
+    createUngroupGroupEvent(fn,flag,data){
+        $(window).on("keydown",function(e){
+            if(e.ctrlKey&&e.key.toUpperCase()=="G"&&e.shiftKey){
                 e.preventDefault();
                 fn(e,data);
                 return false;

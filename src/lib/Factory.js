@@ -6,10 +6,23 @@ class Factory{
         this.selectionAdapter=new SelectionAdapter(this);
         let ref=this;
         $(window).on("group",function(e){
-            let s=ref.selectionAdapter.selectedShapes;
+            let s=ref.sortShapes(ref.selectionAdapter.selectedShapes);
+            if(s.length==0) return;
+            if(s==undefined) return;
             for(let i=1;i<s.length;i++){
                 s[i].addParent(s[i-1]);
             }
+            s[0].scaleAdapter.showHandles();
+            ref.selectionAdapter.deselect();
+            s[0].selected(true);
+        });
+        $(window).on("ungroup",function(e){
+            ref.allShapes.map(function(shape){
+                if(shape.parent!=undefined&&shape.selected()){
+                    shape.detach();
+                    shape.scaleAdapter.showHandles();
+                }
+            });
         });
     }
     /**
@@ -70,6 +83,7 @@ class Factory{
         return selected;    
     }
     sortShapes(shapes){
+        if(shapes==undefined) return [];
         let ref=this;
         let order=[];
         Object.keys(this.canvas.childNodes).forEach(function(i){
