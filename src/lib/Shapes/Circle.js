@@ -33,7 +33,16 @@ class Circle extends Path{
      * @param {*} dy - change of mouse pointer along y axis.
      * @param {*} handle - handle id.
      */
-    doScalling(dx,dy,handle){
-
+    scaleAll(dx,dy,handle){
+        if(handle==0){
+            dy=dx;
+        }else if(handle==2){
+            dx=dy;
+        }else if(handle==4){
+            dy=dx;
+        }else if(handle==6){
+            dx=dy;
+        }
+        super.scaleAll(dx,dy,handle);
     }
 }

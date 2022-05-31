@@ -25,7 +25,7 @@ https://me-sharif-hasan.github.io/iigraph/index.html
 - Visual Shape property editor.
 - Layer System.
 - Custom shape creator (TODO).
-- Timeline anymation creator (TODO).
+- Timeline animation creator (TODO).
 
 
 ## Tech Stack

@@ -10,14 +10,27 @@ class Path{
         this.__init__();
         this.addScaleAdapter();
         this.addMoveAdapter();
-    }
+    }/**
+     * Add parent to the shape which also set the child to the parent
+     * @param {Shape} parent The parent of a shape.
+     */
     addParent(parent){
         let hooker=this.getHookerElement();
         hooker.remove();
-        parent.append(this);
-        this.parent=parent;
-        parent.addChild(this);
+        if(parent!=undefined){
+            parent.append(this);
+            this.parent=parent;
+            parent.addChild(this);
+        }else{
+            this.parent.addChild(undefined);
+            this.canvas.append(hooker);
+            this.parent=undefined;
+        }
     }
+    /**
+     * Add child to the shape. It won't set the parent for you
+     * @param {Shape} shape Child shape.
+     */
     addChild(shape){
         this.child=shape;
     }
@@ -26,6 +39,11 @@ class Path{
      * @param {string} name SVG element name.
      * @returns The SVG element.
      */
+    detach(){
+        if(this.parent!=undefined){
+            this.addParent(undefined);
+        }
+    }
     createSVGElement(name){
         return document.createElementNS("http://www.w3.org/2000/svg",name)
     }
