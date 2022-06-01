@@ -38,6 +38,26 @@ class SelectionAdapter{
             }
         });
     }
+    addShape(shape){
+        if(this.selectedShapes==undefined) this.selectedShapes=[];
+        if(!this.selectedShapes.includes(shape)){
+            this.selectedShapes.push(shape);
+            shape.handleManager.showHandles();
+        }
+        if(this.selectionMarker!=undefined){
+            this.processSelected();
+        }
+    }
+    removeShape(shape){
+        if(this.selectedShapes!=undefined){
+            this.selectedShapes=this.selectedShapes.filter(function(val){
+                if(shape==val){
+                    shape.handleManager.removeHandles();
+                }
+                return shape!=val;
+            });
+        }
+    }
     deselect(){
         let ref=this;
         ref.selectionMarker.remove();
@@ -56,15 +76,15 @@ class SelectionAdapter{
     * @returns Cordinates
     */
     getSelection(box){
-        let shapes=[];
+       // let shapes=[];
         this.factory.allShapes.forEach(function(elm){
             let bbox=elm.getHookerElement().getBBox();
             if(bbox.x>=box.x&&bbox.y>=box.y&&bbox.width+bbox.x<=box.x+box.width&&bbox.height+bbox.y<=box.height+box.y){
                 elm.selected(true);
-                shapes.push(elm);
+                //shapes.push(elm);
             }
         });
-        return shapes;
+        //return shapes;
     }
 
     /**
@@ -86,7 +106,7 @@ class SelectionAdapter{
     }
 
     processSelected(box){
-        this.selectedShapes=this.getSelection(box);
+        if(box!=undefined) this.getSelection(box);
         box=this.getSelectionBounds(this.selectedShapes);
         if(this.selectionMarker!=undefined){
             this.selectionMarker.remove();

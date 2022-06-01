@@ -1,19 +1,23 @@
-class HandleAdapter{
-    /**
-     * HandleAdapter class helps to construct handles for a shape.
-     * @param {Path} base Base shape.
-     */
-    constructor(base){
-        this.base=base;
+class HandleManager{
+    constructor(shape){
+        this.shape=shape;
+        this.__init__();
     }
-    
-    getBBox(){
-        return this.base.getHookerElement().getBBox();
+    __init__(){
+        let ref=this;
+        $(this.shape).on("select",function(shape){
+            //if(shape.selected())
+                //ref.showHandles();
+            //else
+                //ref.removeHandles();
+        });
     }
-
+    removeHandles(){
+        this.shape.removeHandles();
+    }
     showHandles(){
         let ref=this;
-        let bbox=this.getBBox();
+        let bbox=ref.shape.getBBox();
         let x=bbox.x,y=bbox.y,w=bbox.width,h=bbox.height;
         let points=[];
         points.push([x,y]);
@@ -28,7 +32,7 @@ class HandleAdapter{
         
         let d="M "+x+" "+y+" ";
 
-        let group=this.base.createSVGElement("g");
+        let group=this.shape.createSVGElement("g");
         let handle={"circles":[],"lines":undefined};
         let id=0;
         points.forEach(function(p){
@@ -37,18 +41,19 @@ class HandleAdapter{
         });
         let lines=null;
         if(this.handles["lines"]==undefined){
-            lines=this.base.createSVGElement("path");
+            lines=this.shape.createSVGElement("path");
             this.handles["lines"]=lines;
         }
         else{
             lines=this.handles["lines"];
         }
-        this.base.addParameter("d",d,lines);
-        this.base.addParameter("class","handle-lines",lines);
+        this.shape.addParameter("d",d,lines);
+        this.shape.addParameter("class","handle-lines",lines);
         handle["lines"]=lines;
-        this.base.addHandles(handle);
+        this.shape.addHandles(handle);
     }
     createHandleCircle(cx,cy,id){
+        let ref=this;
         if(this.handles==undefined){
             this.handles={};
         }
@@ -59,16 +64,18 @@ class HandleAdapter{
         if(this.handles["circles"][id]!=undefined){
             circle=this.handles["circles"][id];
         }else{
-            circle=this.base.createSVGElement("circle");
+            circle=this.shape.createSVGElement("circle");
             this.handles["circles"][id]=circle;
-            $(circle).on("drag",this.dragHandler,false,this);
+            $(circle).on("drag",function(e){
+                ref.shape.callEvents("scale",[e,id]);
+            },false,this);
         }
-        this.base.addParameter("cx",cx,circle);
-        this.base.addParameter("cy",cy,circle);
-        this.base.addParameter("r",4,circle);
-        this.base.addParameter("class","handle-circle",circle);
-        this.base.addParameter("data-handleid",id,circle);  
-        this.base.addParameter("style","cursor:"+this.cursorDecider(id)+";",circle);
+        this.shape.addParameter("cx",cx,circle);
+        this.shape.addParameter("cy",cy,circle);
+        this.shape.addParameter("r",4,circle);
+        this.shape.addParameter("class","handle-circle",circle);
+        this.shape.addParameter("data-handleid",id,circle);  
+        this.shape.addParameter("style","cursor:"+this.cursorDecider(id)+";",circle);
         return circle;
     }
 

@@ -12,15 +12,16 @@ class Factory{
             for(let i=1;i<s.length;i++){
                 s[i].addParent(s[i-1]);
             }
-            s[0].scaleAdapter.showHandles();
+            s[0].handleManager.showHandles();
             ref.selectionAdapter.deselect();
             s[0].selected(true);
         });
         $(window).on("ungroup",function(e){
-            ref.allShapes.map(function(shape){
+            let sorted=ref.sortShapes(ref.allShapes);
+            console.log(sorted);
+            sorted.map(function(shape){
                 if(shape.parent!=undefined&&shape.selected()){
                     shape.detach();
-                    shape.scaleAdapter.showHandles();
                 }
             });
         });
@@ -58,6 +59,7 @@ class Factory{
                 shape=new RightAngleTriangle(this.canvas);
             break;
         }
+        shape.addFactory(this);
         let ref=this;
         Object.keys(this.events).forEach(function(name){
             $(shape).on(name,ref.events[name]);
@@ -88,7 +90,7 @@ class Factory{
         let order=[];
         Object.keys(this.canvas.childNodes).forEach(function(i){
             shapes.forEach(function(shape){
-                if(ref.canvas.childNodes[i]==shape.getHookerElement()){
+                if(ref.canvas.childNodes[i]==shape.getHookerGroup()){
                     order.push(shape);
                 }
             });
@@ -104,6 +106,13 @@ class Factory{
         this.sortShapes(this.getselected()).reverse().forEach(function(shape){
             shape.toFront();
         });
+    }
+    moveAllSelected(dx,dy){
+        if(this.selectionAdapter.selectedShapes!=undefined){
+            this.selectionAdapter.selectedShapes.map(function(shape){
+                shape.moveAll(dx,dy);
+            });
+        }
     }
     addEventListener(name,fn){
         if(this.events[name]==undefined) this.events[name]=[];

@@ -8,7 +8,9 @@ class Path{
         this.name=this.constructor.name+" "+Path.objectWiseId[this.constructor.name];
         this.canvas=canvas;
         this.__init__();
-        this.addScaleAdapter();
+        this.addEventManager();
+        this.addHandleManager();
+        //this.addScaleAdapter();
         this.addMoveAdapter();
     }/**
      * Add parent to the shape which also set the child to the parent
@@ -59,7 +61,7 @@ class Path{
         this.getHookerElement().append(shape.getHookerElement());
     }
     getBBox(){
-        return this.getHookerElement().getBBox();
+        return this.getHookerGroup().getBBox();
     }
     allowHandle(flag){
         this.isHandleAllowed=flag;
@@ -178,7 +180,13 @@ class Path{
         this.scaleAdapter=new ScaleAdapter(this.getHookerGroup(),this);
     }
     addMoveAdapter(){
-        this.moveAdapter=new MoveAdapter(this.getHookerGroup(),this);
+        this.moveAdapter=new MoveAdapter(this);
+    }
+    addHandleManager(){
+        this.handleManager=new HandleManager(this);
+    }
+    addEventManager(){
+        this.eventManager=new ShapeEventManager(this);
     }
     /**
      * 
@@ -396,9 +404,7 @@ class Path{
      * @param {Number} dx Shift along x axis.
      * @param {Number} dy Shift along y axis.
      */
-    moveAll(dx,dy,force=false){
-        if(this.parent!=undefined&&force!=true) return;
-        this.selected(true);
+    moveAll(dx,dy){
         let ref=this;
         let allD=[];
         this.path.map(function(shape){
@@ -407,12 +413,10 @@ class Path{
             allD.push(sd);
         });
         ref.updatePath(allD);
-        if(this.isHandleAllowed==false) this.removeHandles();
-        if(this.child!=undefined) this.child.moveAll(dx,dy,true);
-        if(this.parent==undefined) this.scaleAdapter.showHandles();
+        this.callEvents("move");
     }
     /**
-     * moveAll will move specific path string to a new position along x and y axis.
+     * move will move specific path string to a new position along x and y axis.
      * @param {Number} dx Shift along x axis.
      * @param {Number} dy Shift along y axis.
      */
@@ -447,6 +451,9 @@ class Path{
         });
         return serialize(segs);
     }
+    addFactory(factory){
+        this.factory=factory;
+    }
     /**
      * Set or get current selection state.
      * @param {boolean} value set the selection state
@@ -459,6 +466,11 @@ class Path{
             this.isSelected=value;
             if(temp!=value){
                 this.callEvents("select");
+            }
+            if(value==true){
+                this.factory.selectionAdapter.addShape(this);
+            }else{
+                this.factory.selectionAdapter.removeShape(this);
             }
             if(this.child!=undefined) this.child.selected(value);
         }
@@ -498,11 +510,11 @@ class Path{
      * Call an event.
      * @param {string} name Event name.
      */
-    callEvents(name){
+    callEvents(name,e){
         if(this.events[name]==undefined) this.events[name]=[];
         let ref=this;
         this.events[name].forEach(function(f){
-            f(ref);
+            f(ref,e);
         })
     }
     

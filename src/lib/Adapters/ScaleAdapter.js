@@ -71,10 +71,11 @@ class ScaleAdapter{
         this.base.addParameter("d",d,lines);
         this.base.addParameter("class","handle-lines",lines);
         handle["lines"]=lines;
-        this.base.addHandles(handle);
-        this.base.selected(true);
+        //this.base.addHandles(handle);
+        //this.base.selected(true);
     }
     createHandleCircle(cx,cy,id){
+        let ref=this;
         if(this.handles==undefined){
             this.handles={};
         }
@@ -87,7 +88,9 @@ class ScaleAdapter{
         }else{
             circle=this.base.createSVGElement("circle");
             this.handles["circles"][id]=circle;
-            $(circle).on("drag",this.dragHandler,false,this);
+            $(circle).on("drag",function(e){
+                //ref.sh
+            },false,this);
         }
         this.base.addParameter("cx",cx,circle);
         this.base.addParameter("cy",cy,circle);

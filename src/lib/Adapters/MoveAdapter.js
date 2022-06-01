@@ -1,9 +1,10 @@
 class MoveAdapter{
-    constructor(elm,base){
-        this.element=elm;
-        this.base=base;
-        $(elm).on("drag",function(e){
-            if(e.mousemove!=undefined) base.moveAll(e.difference.x,e.difference.y);
+    constructor(shape){
+        this.shape=shape;
+        $(shape.getHookerElement()).on("drag",function(e){
+            if(e.mousemove!=undefined&&shape.parent==undefined){
+                shape.callEvents("doMoveAction",[e.difference.x,e.difference.y]);
+            }
         },false,this);
     }
 }
