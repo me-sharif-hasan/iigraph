@@ -9,10 +9,16 @@ class ShapeEventManager{
             if(ref.shape.canvas.contains(e.target)){
                 if(ref.shape.getHookerGroup().contains(e.target)){
                     ref.shape.selected(true);
-                
                 }else{
-                    ref.shape.selected(false);
+                    //console.log("removing handles",ref.shape.name);
+                    //ref.shape.selected(false);
                 }
+            }
+        });
+        $(window).on("mousedown",function(e){
+            if(!ref.shape.getHookerGroup().contains(e.target)&&!e.ctrlKey){
+                //console.log("deselct this",ref.shape.name);
+                ref.shape.selected(false);
             }
         });
         $(this.shape).on("move",function(e){
@@ -21,8 +27,7 @@ class ShapeEventManager{
             }
         });
         $(this.shape).on("scale",function(shape,e){
-            console.log("scalling",e);
-            let sx=e[0].difference.x,sy=0;
+            let sx=e[0].difference.x,sy=e[0].difference.y;
             if(e[1]>=0&&e[1]<=2) sx*=-1;
             if(e[1]==0||e[1]==6||e[1]==7) sy*=-1;
             if(e[1]==1||e[1]==5){

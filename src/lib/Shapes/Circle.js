@@ -43,6 +43,6 @@ class Circle extends Path{
         }else if(handle==6){
             dx=dy;
         }
-        super.scaleAll(dx,dy,handle);
+        return super.scaleAll(dx,dy,handle);
     }
 }

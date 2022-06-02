@@ -33,7 +33,7 @@ class SelectionAdapter{
         });
         $(window).on("click",function(e){
             if(!ref.factory.canvas.contains(e.target)) return;
-            if(ref.selectionMarker!=undefined){
+            if(ref.selectedShapes!=undefined){
                 ref.deselect();
             }
         });
@@ -60,13 +60,15 @@ class SelectionAdapter{
     }
     deselect(){
         let ref=this;
-        ref.selectionMarker.remove();
-        ref.selectionMarker=undefined;
+        if(ref.selectionMarker!=undefined){
+            ref.selectionMarker.remove();
+            ref.selectionMarker=undefined;
+        }
         if(ref.selectedShapes!=undefined){
             ref.selectedShapes.forEach(function(shape){
                 shape.selected(false);
-                ref.selectedShapes=undefined;
             });
+            ref.selectedShapes=undefined;
         }
     }
 
@@ -107,6 +109,7 @@ class SelectionAdapter{
 
     processSelected(box){
         if(box!=undefined) this.getSelection(box);
+        if(this.selectedShapes==undefined) return;
         box=this.getSelectionBounds(this.selectedShapes);
         if(this.selectionMarker!=undefined){
             this.selectionMarker.remove();

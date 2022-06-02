@@ -177,7 +177,7 @@ class Path{
         }
     }
     addScaleAdapter(){
-        this.scaleAdapter=new ScaleAdapter(this.getHookerGroup(),this);
+        //this.scaleAdapter=new ScaleAdapter(this.getHookerGroup(),this);
     }
     addMoveAdapter(){
         this.moveAdapter=new MoveAdapter(this);
@@ -201,6 +201,11 @@ class Path{
             crntshape=crntshape.parent;
         }
         return crntshape.getHookerElement();
+    }
+    getRoot(root){
+        if(root==undefined) root=this.parent;
+        if(root==undefined) return this;
+        this.getRoot(root);
     }
 
     /* SVG related methods*/
@@ -274,17 +279,21 @@ class Path{
             if(sd==false ||!willUpdate||sd.match(NaN)!=null||sd.match(Infinity)!=null) {willUpdate=false;return;}
             allD.push(sd);
         });
-        if(!willUpdate) return false;
-        if(this.child!=undefined){
-            let k=this.child.scaleAll(dx,dy,handle);
-            if(!k) return false;
-        }
         if(willUpdate){
-            ref.updatePath(allD);
-            return true;
-        }else{
-            return false;
+            if(this.child!=undefined){
+                let k=this.child.scaleAll(dx,dy,handle);
+                if(k){
+                    this.updatePath(allD);
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                this.updatePath(allD);
+                return true;
+            }
         }
+        return false;
     }
     /**
      * scale method will scale a path provided by d parameter.
