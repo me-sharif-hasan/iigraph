@@ -5,20 +5,28 @@ class ShapeEventManager{
     }
     __init__(){
         let ref=this;
-        $(window).on("click",function(e){
-            if(ref.shape.canvas.contains(e.target)){
-                if(ref.shape.getHookerGroup().contains(e.target)){
-                    ref.shape.selected(true);
-                }else{
-                    //console.log("removing handles",ref.shape.name);
-                    //ref.shape.selected(false);
+        $(ref.shape.getHookerGroup()).on("click",function(e){
+            ref.shape.selected(true,e);
+        });
+        $(window).on('mousedown',function(e){
+            if(!ref.shape.canvas.contains(e.target)) return;
+            if(!ref.shape.getHookerGroup().contains(e.target)){
+                if(ref.shape.selectedWithCtrl!=true){
+                    ref.shape.selected(false,e);
                 }
             }
         });
-        $(window).on("mousedown",function(e){
-            if(!ref.shape.getHookerGroup().contains(e.target)&&!e.ctrlKey){
-                //console.log("deselct this",ref.shape.name);
-                ref.shape.selected(false);
+        $(ref.shape.canvas).on("click",function(e){
+            if(!e.ctrlKey){
+                ref.shape.selectedWithCtrl=false;
+                if(!ref.shape.getHookerGroup().contains(e.target)){
+                    ref.shape.selected(false,e);
+                }
+            }
+        })
+        $(window).on("keydown",function(e){
+            if(ref.shape.selected()){
+                ref.shape.selectedWithCtrl=e.ctrlKey;
             }
         });
         $(this.shape).on("move",function(e){
@@ -41,6 +49,15 @@ class ShapeEventManager{
         });
         $(this.shape).on("doMoveAction",function(shape,e){
             ref.shape.selected(true);
+            if(!ref.shape.selectedWithCtrl){
+            let ctrlSelected=ref.shape.factory.getCtrlSelectedItems();
+            if(ctrlSelected.length>0){
+                console.log("CTRL selected exists");
+                    ctrlSelected.map(function(shape){
+                        shape.selected(false,{"ctrlKey":false});
+                    });
+                }
+            }
             ref.shape.factory.moveAllSelected(e[0],e[1]);
         });
     }

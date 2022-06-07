@@ -468,13 +468,14 @@ class Path{
      * @param {boolean} value set the selection state
      * @returns boolean-current selection state
      */
-    selected(value){
+    selected(value,event){
         if(this.isSelected==undefined) this.isSelected=false;
         if(value!=undefined){
             let temp=this.isSelected;
             this.isSelected=value;
             if(temp!=value){
-                this.callEvents("select");
+                if(event!=undefined) this.selectedWithCtrl=event.ctrlKey;
+                this.callEvents("select",event);
             }
             if(value==true){
                 this.factory.selectionAdapter.addShape(this);
@@ -530,6 +531,11 @@ class Path{
     save(){
         let saves=[];
         saves["group"]=this.getHookerElement().toString();
+    }
+    delete(){
+        this.selected(false);
+        this.getHookerGroup().remove();
+        return true;
     }
 
 }

@@ -12,7 +12,7 @@ class Circle extends Path{
         let R=100;
         let cmd=this.circlePath(cx,cy,R);
         this.addPath(cmd);
-        this.fill("transparent");
+        this.fill("white");
         this.stroke("black");
         this.strokeWidth(4);
     }

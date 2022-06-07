@@ -18,11 +18,24 @@ class Factory{
         });
         $(window).on("ungroup",function(e){
             let sorted=ref.sortShapes(ref.allShapes);
-            console.log(sorted);
+            let ps=[]
             sorted.map(function(shape){
-                if(shape.parent!=undefined&&shape.selected()){
-                    shape.detach();
-                }
+               if(shape.selected()){
+                   shape.detach();
+                   ps.push(shape);
+               }
+            });
+            ps.map(function(shape){
+                shape.selected(false,{"selectedWithCtrl":true});
+            });
+        });
+        $(window).on("delete",function(e){
+            ref.selectionAdapter.selectedShapes.filter(function(shape){
+                ref.allShapes.filter(function(ss){
+                    return ss!=shape;
+                })
+                shape.delete();
+                return false;
             });
         });
     }
@@ -117,5 +130,14 @@ class Factory{
     addEventListener(name,fn){
         if(this.events[name]==undefined) this.events[name]=[];
         this.events[name].push(fn);
+    }
+    getCtrlSelectedItems(){
+        let items=[];
+        this.allShapes.forEach(function(shape){
+            if(shape.selectedWithCtrl){
+                items.push(shape)
+            }
+        });
+        return items;
     }
 }
