@@ -31,22 +31,38 @@ class SelectionAdapter{
                 rect.setAttributeNS(null,"points",s);
             }
         });
-        $(window).on("click",function(e){
-            if(!ref.factory.canvas.contains(e.target)) return;
-            if(ref.selectionMarker!=undefined){
-                ref.deselect();
-            }
-        });
+    }
+    addShape(shape){
+        if(this.selectedShapes==undefined) this.selectedShapes=[];
+        if(!this.selectedShapes.includes(shape)){
+            this.selectedShapes.push(shape);
+            shape.handleManager.showHandles();
+        }
+        if(this.selectionMarker!=undefined){
+            this.processSelected();
+        }
+    }
+    removeShape(shape){
+        if(this.selectedShapes!=undefined){
+            this.selectedShapes=this.selectedShapes.filter(function(val){
+                if(shape==val){
+                    shape.handleManager.removeHandles();
+                }
+                return shape!=val;
+            });
+        }
     }
     deselect(){
         let ref=this;
-        ref.selectionMarker.remove();
-        ref.selectionMarker=undefined;
+        if(ref.selectionMarker!=undefined){
+            ref.selectionMarker.remove();
+            ref.selectionMarker=undefined;
+        }
         if(ref.selectedShapes!=undefined){
             ref.selectedShapes.forEach(function(shape){
                 shape.selected(false);
-                ref.selectedShapes=undefined;
             });
+            ref.selectedShapes=undefined;
         }
     }
 
@@ -56,15 +72,12 @@ class SelectionAdapter{
     * @returns Cordinates
     */
     getSelection(box){
-        let shapes=[];
         this.factory.allShapes.forEach(function(elm){
             let bbox=elm.getHookerElement().getBBox();
             if(bbox.x>=box.x&&bbox.y>=box.y&&bbox.width+bbox.x<=box.x+box.width&&bbox.height+bbox.y<=box.height+box.y){
                 elm.selected(true);
-                shapes.push(elm);
             }
         });
-        return shapes;
     }
 
     /**
@@ -86,37 +99,10 @@ class SelectionAdapter{
     }
 
     processSelected(box){
-        this.selectedShapes=this.getSelection(box);
-        box=this.getSelectionBounds(this.selectedShapes);
-        if(this.selectionMarker!=undefined){
-            this.selectionMarker.remove();
-        }
-        if(box.x2>0&&box.y2>0){
-            this.selectionMarker=document.createElementNS("http://www.w3.org/2000/svg","polygon")
-            this.selectionMarker.setAttributeNS(null,"class","selection-rect");
-            let markerFor={};
-            this.selectedShapes.forEach(function(shape){
-                markerFor[shape.name]=true;
-            });
-            this.selectionMarker.setAttributeNS(null,"data-markerfor",JSON.stringify(markerFor));
-            let s=box.x1+","+box.y1+" "+box.x1+","+box.y2+" "+box.x2+","+box.y2+" "+box.x2+","+box.y1;
-            this.selectionMarker.setAttributeNS(null,"points",s);
-            this.factory.canvas.appendChild(this.selectionMarker);
-            let ref=this;
-            $(ref.selectionMarker).on("drag",function(e){
-                ref.selectedShapes.forEach(function(shape){
-                    shape.allowHandle(false);
-                    shape.moveAll(e.difference.x,e.difference.y);
-                    box=ref.getSelectionBounds(ref.selectedShapes);
-                    let s=box.x1+","+box.y1+" "+box.x1+","+box.y2+" "+box.x2+","+box.y2+" "+box.x2+","+box.y1;
-                    ref.selectionMarker.setAttributeNS(null,"points",s);
-                });
-                if(e.mouseup!=undefined){
-                    ref.selectedShapes.forEach(function(shape){
-                        shape.allowHandle(true);
-                    });
-                }
-            });
-        }
+        if(box!=undefined) this.getSelection(box);
+        if(this.selectedShapes==undefined) return;
+        this.selectedShapes.map(function(shape){
+            shape.selectedWithCtrl=true;
+        });
     }
 }

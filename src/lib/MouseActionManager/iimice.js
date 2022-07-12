@@ -13,6 +13,7 @@ class iimise{
         if(eventName=="drag") this.createDragEvent(functionName,flag,data);
         else if(eventName=="group") this.createGroupEvent(functionName,flag,data);
         else if(eventName=="ungroup") this.createUngroupGroupEvent(functionName,flag,data);
+        else if(eventName=="delete") this.createDeleteEvent(functionName,flag,data);
         else{
             this.element.addEventListener(eventName,functionName,flag);
             return this;
@@ -89,6 +90,15 @@ class iimise{
     createUngroupGroupEvent(fn,flag,data){
         $(window).on("keydown",function(e){
             if(e.ctrlKey&&e.key.toUpperCase()=="G"&&e.shiftKey){
+                e.preventDefault();
+                fn(e,data);
+                return false;
+            }
+        })
+    }
+    createDeleteEvent(fn,flag,data){
+        $(window).on("keydown",function(e){
+            if(e.key.toUpperCase()=="DELETE"){
                 e.preventDefault();
                 fn(e,data);
                 return false;

@@ -12,7 +12,7 @@ class Circle extends Path{
         let R=100;
         let cmd=this.circlePath(cx,cy,R);
         this.addPath(cmd);
-        this.fill("transparent");
+        this.fill("white");
         this.stroke("black");
         this.strokeWidth(4);
     }
@@ -33,7 +33,8 @@ class Circle extends Path{
      * @param {*} dy - change of mouse pointer along y axis.
      * @param {*} handle - handle id.
      */
-    scaleAll(dx,dy,handle){
+    scaleAll(dx,dy,handle,ignoreAspectRatio=false){
+        if(!ignoreAspectRatio){
         if(handle==0){
             dy=dx;
         }else if(handle==2){
@@ -43,6 +44,7 @@ class Circle extends Path{
         }else if(handle==6){
             dx=dy;
         }
-        super.scaleAll(dx,dy,handle);
+    }
+        return super.scaleAll(dx,dy,handle);
     }
 }

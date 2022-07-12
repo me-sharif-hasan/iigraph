@@ -175,7 +175,12 @@ a:hover{
         stroke-dashoffset:10.5;
     }
 }
-.handle-lines,.selection-rect{
+.selection-rect{
+    fill: none;
+    stroke: rgb(62, 119, 204);
+    stroke-width: 0.7;
+}
+.handle-lines{
 fill: none;
 stroke: #000;
 stroke-dasharray: 5;
@@ -195,10 +200,7 @@ animation-iteration-count: infinite;
 .shape{
     cursor: var(--move_icon) 14 14,auto;
 }
-.selection-rect{
-    fill: #ccc3;
-    stroke: rgb(0, 0, 0);
-}
+
 .drag-selector{
     pointer-events: none;
 }

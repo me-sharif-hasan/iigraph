@@ -5,7 +5,7 @@ class RightAngleTriangle extends Path{
     }
     createCloud(){
         this.addPath("M383,247.35599237741803h154.3560063056333V94L383,247.35599237741803z");
-        this.fill("transparent");
+        this.fill("white");
         this.stroke("black")
         this.strokeWidth(4);
     }

@@ -62,4 +62,5 @@ If you have any feedback, please reach out to us at me.sharif.hasan@gmail.com
 ## Third party libs
 
 - [Coloris colorpicker](https://github.com/mdbassit/Coloris)
+- [svg-path-commander](https://github.com/thednp/svg-path-commander)
 

@@ -12,16 +12,30 @@ class Factory{
             for(let i=1;i<s.length;i++){
                 s[i].addParent(s[i-1]);
             }
-            s[0].scaleAdapter.showHandles();
+            s[0].handleManager.showHandles();
             ref.selectionAdapter.deselect();
             s[0].selected(true);
         });
         $(window).on("ungroup",function(e){
-            ref.allShapes.map(function(shape){
-                if(shape.parent!=undefined&&shape.selected()){
-                    shape.detach();
-                    shape.scaleAdapter.showHandles();
-                }
+            let sorted=ref.sortShapes(ref.allShapes);
+            let ps=[]
+            sorted.map(function(shape){
+               if(shape.selected()){
+                   shape.detach();
+                   ps.push(shape);
+               }
+            });
+            ps.map(function(shape){
+                shape.selected(false,{"selectedWithCtrl":true});
+            });
+        });
+        $(window).on("delete",function(e){
+            ref.selectionAdapter.selectedShapes.filter(function(shape){
+                ref.allShapes.filter(function(ss){
+                    return ss!=shape;
+                })
+                shape.delete();
+                return false;
             });
         });
     }
@@ -49,7 +63,6 @@ class Factory{
             break;
             case "rect":
                 shape=new Rectangle(this.canvas);
-                console.log(shape);
             break;
             case "finger":
                 shape=new Finger(this.canvas);
@@ -58,6 +71,7 @@ class Factory{
                 shape=new RightAngleTriangle(this.canvas);
             break;
         }
+        shape.addFactory(this);
         let ref=this;
         Object.keys(this.events).forEach(function(name){
             $(shape).on(name,ref.events[name]);
@@ -88,7 +102,7 @@ class Factory{
         let order=[];
         Object.keys(this.canvas.childNodes).forEach(function(i){
             shapes.forEach(function(shape){
-                if(ref.canvas.childNodes[i]==shape.getHookerElement()){
+                if(ref.canvas.childNodes[i]==shape.getHookerGroup()){
                     order.push(shape);
                 }
             });
@@ -105,8 +119,27 @@ class Factory{
             shape.toFront();
         });
     }
+    moveAllSelected(dx,dy){
+        if(this.selectionAdapter.selectedShapes!=undefined){
+            this.selectionAdapter.selectedShapes.map(function(shape){
+                shape.moveAll(dx,dy);
+            });
+        }
+    }
     addEventListener(name,fn){
         if(this.events[name]==undefined) this.events[name]=[];
         this.events[name].push(fn);
+    }
+    getCtrlSelectedItems(){
+        let items=[];
+        this.allShapes.forEach(function(shape){
+            if(shape.selectedWithCtrl){
+                items.push(shape)
+            }
+        });
+        return items;
+    }
+    clone(){
+       // [...this.allShapes]
     }
 }
