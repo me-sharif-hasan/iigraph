@@ -56,31 +56,6 @@ let canvas=document.getElementById("canvas");
             }
         });
 
-        $(factory).on("select",function(shape){
-            let id=shape.name;
-            let elm;
-            let moveUpdate=function(e){
-                let x=shape.getBBox().x;
-                let y=shape.getBBox().y;
-                elm.childNodes[1].value=x;
-                elm.childNodes[2].value=y;
-            }
-            if(shape.selected()){
-                let x=shape.getBBox().x;
-                let y=shape.getBBox().y;
-                elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title" align="center">'+shape.name+'</div><input type="number" class="shape-move property-value" value='+x+'></input><input type="number" class="shape-move property-value" value='+y+'></input></div>');
-                document.getElementById("move").appendChild(elm);
-                $(shape).on("move",moveUpdate);
-                $(shape).on("scale",moveUpdate);
-            }else{
-                if(document.getElementById(id)!=undefined){
-                    document.getElementById(id).remove();
-                    shape.removeEventListener("move",moveUpdate);
-                    shape.removeEventListener("scale",moveUpdate);
-                }
-            }
-        });
-
         function htmlToElement(html) {
             var template = document.createElement('template');
             html = html.trim(); // Never return a text node of whitespace as the result
