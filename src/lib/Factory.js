@@ -63,7 +63,6 @@ class Factory{
             break;
             case "rect":
                 shape=new Rectangle(this.canvas);
-                console.log(shape);
             break;
             case "finger":
                 shape=new Finger(this.canvas);
@@ -139,5 +138,8 @@ class Factory{
             }
         });
         return items;
+    }
+    clone(){
+       // [...this.allShapes]
     }
 }

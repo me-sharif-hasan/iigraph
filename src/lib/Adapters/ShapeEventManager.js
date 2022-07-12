@@ -9,7 +9,7 @@ class ShapeEventManager{
             ref.shape.selected(true,e);
         });
         $(window).on('mousedown',function(e){
-            if(!ref.shape.canvas.contains(e.target)) return;
+            if(!ref.shape.canvas.contains(e.target)||e.target.dataset["handleid"]!=undefined) return;
             if(!ref.shape.getHookerGroup().contains(e.target)){
                 if(ref.shape.selectedWithCtrl!=true){
                     ref.shape.selected(false,e);
@@ -19,7 +19,7 @@ class ShapeEventManager{
         $(ref.shape.canvas).on("click",function(e){
             if(!e.ctrlKey){
                 ref.shape.selectedWithCtrl=false;
-                if(!ref.shape.getHookerGroup().contains(e.target)){
+                if(!ref.shape.getHookerGroup().contains(e.target)&&e.target.dataset["handleid"]==undefined){
                     ref.shape.selected(false,e);
                 }
             }
@@ -29,6 +29,11 @@ class ShapeEventManager{
                 ref.shape.selectedWithCtrl=e.ctrlKey;
             }
         });
+        $(ref.shape.getHookerElement()).on("drag",function(e){
+            if(e.mousemove!=undefined&&ref.shape.parent==undefined){
+                ref.shape.callEvents("doMoveAction",[e.difference.x,e.difference.y]);
+            }
+        },false,this);
         $(this.shape).on("move",function(e){
             if(ref.shape.handleManager!=undefined){
                 ref.shape.handleManager.showHandles();
@@ -59,6 +64,17 @@ class ShapeEventManager{
                 }
             }
             ref.shape.factory.moveAllSelected(e[0],e[1]);
+        });
+
+        $(this.shape).on("rotate",function(shape,e){
+            ref.shape.rotateAll(e.theta);
+        });
+        $(this.shape).on("before-rotate",function(shape,e){
+            ref.shape.setMainOrigin(false);
+        });
+        $(this.shape).on("after-rotate",function(shape,e){
+            ref.shape.setMainOrigin(true);
+            ref.shape.handleManager.showHandles();
         });
     }
 }

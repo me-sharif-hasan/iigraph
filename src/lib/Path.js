@@ -3,6 +3,9 @@ class Path{
     static id=1;
     static objectWiseId=[];
     constructor(canvas){
+        this.start();
+    }
+    start(){
         Path.id++;
         Path.objectWiseId[this.constructor.name]=(Path.objectWiseId[this.constructor.name]==undefined?1:Path.objectWiseId[this.constructor.name]+1);
         this.name=this.constructor.name+" "+Path.objectWiseId[this.constructor.name];
@@ -10,9 +13,8 @@ class Path{
         this.__init__();
         this.addEventManager();
         this.addHandleManager();
-        //this.addScaleAdapter();
-        this.addMoveAdapter();
-    }/**
+    }
+    /**
      * Add parent to the shape which also set the child to the parent
      * @param {Shape} parent The parent of a shape.
      */
@@ -78,6 +80,9 @@ class Path{
         handle["circles"].forEach(function(elm){
             ref.canvas.append(elm);
         });
+        handle["rotator"].forEach(function(elm){
+            ref.canvas.append(elm);
+        });
         //this.selected(true);
     }
     /**
@@ -88,6 +93,9 @@ class Path{
         if(this.handle["lines"]!=undefined) this.handle["lines"].remove();
         if(this.handle["circles"]!=undefined){
             this.handle["circles"].forEach(function(e){e.remove()});
+        }
+        if(this.handle["rotator"]!=undefined){
+            this.handle["rotator"].forEach(function(e){e.remove()});
         }
         this.handle=undefined;
         }
@@ -176,12 +184,6 @@ class Path{
             ref.addParameter("d",d,this.path[idx]);
         }
     }
-    addScaleAdapter(){
-        //this.scaleAdapter=new ScaleAdapter(this.getHookerGroup(),this);
-    }
-    addMoveAdapter(){
-        this.moveAdapter=new MoveAdapter(this);
-    }
     addHandleManager(){
         this.handleManager=new HandleManager(this);
     }
@@ -262,7 +264,34 @@ class Path{
             ref.addParameter("stroke-width",width,this.path[idx]);
         }
     }
-    
+
+    setMainOrigin(clr){
+        if(clr==true){
+            this.morigin=undefined;
+            return;
+        }
+        let reference=this.getHookerGroup().getBBox();
+        let cx=reference.x+reference.width/2;
+        let cy=reference.y+reference.height/2;
+        this.morigin={};
+        this.morigin.x=cx;
+        this.morigin.y=cy;
+    }
+    rotateAll(theta,morigin){
+        let center=morigin;
+        if(center==undefined) center=this.morigin;
+        let ref=this;
+        let allPaths=[];
+        this.getPaths().forEach(function(path){
+           let p=path.getAttribute("d");
+           let s=new SVGPathCommander(p).transform({rotate:[theta*180/3.1416],origin:[center.x,center.y]}).toString();
+           allPaths.push(s);
+        });
+        if(this.child!=undefined){
+            this.child.rotateAll(theta,center);
+        }
+        this.updatePath(allPaths);
+    }
     /**
      * scaleAll scales all the shapes in the group.
      * @param {Number} dx Scale along x axis.
@@ -281,7 +310,7 @@ class Path{
         });
         if(willUpdate){
             if(this.child!=undefined){
-                let k=this.child.scaleAll(dx,dy,handle);
+                let k=this.child.scaleAll(dx,dy,handle,true);
                 if(k){
                     this.updatePath(allD);
                     return true;
@@ -404,7 +433,9 @@ class Path{
         }
         let pathData=this.move(dx,dy,segs);
         let b=this.createPlaceholder(pathData,pathId).getBBox();
-        if(b.width<1||b.height<1) return false;
+        if(b.width<1||b.height<1){
+            return false;
+        }
         return pathData;
     }
     
@@ -517,7 +548,7 @@ class Path{
         })
     }
     /**
-     * Call an event.
+     * Call the associated events
      * @param {string} name Event name.
      */
     callEvents(name,e){
@@ -527,11 +558,17 @@ class Path{
             f(ref,e);
         })
     }
-    
+    /**
+     * Save the shape as string.
+     */
     save(){
         let saves=[];
         saves["group"]=this.getHookerElement().toString();
     }
+    /**
+     * delete the shape
+     * @returns true if success.
+     */
     delete(){
         this.selected(false);
         this.getHookerGroup().remove();
