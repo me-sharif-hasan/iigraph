@@ -438,6 +438,11 @@ class Path{
         }
         return pathData;
     }
+
+    getParant(){
+        if(this.parent==undefined) return this;
+        return this.parent.getParant();
+    }
     
     /**
      * moveAll will move whole shape to a new position along x and y axis.
@@ -453,7 +458,8 @@ class Path{
             allD.push(sd);
         });
         ref.updatePath(allD);
-        this.callEvents("move");
+        this.getParant().handleManager.showHandles();
+       this.callEvents("move");
     }
     /**
      * move will move specific path string to a new position along x and y axis.
@@ -546,6 +552,18 @@ class Path{
         fn.forEach(function(f){
             ref.events[name].push(f);
         })
+    }
+    /**
+     * Removes a function from the event listener.
+     * @param {String} name Name of the event
+     * @param {Function} fn Function reference.
+     */
+    removeEventListener(name,fn){
+        if(!Array.isArray(this.events)&&!Array.isArray(this.events[name])) return false;
+        this.events[name]=this.events[name].filter(function(f){
+            return f.toString()!=fn.toString();
+        });
+        console.log(this.events[name].length);
     }
     /**
      * Call the associated events

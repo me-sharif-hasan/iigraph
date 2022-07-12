@@ -228,10 +228,10 @@ animation-iteration-count: infinite;
     box-shadow: 0 0 14px rgb(212, 212, 212);
 }
 
-#fill div{
+.property-box div{
     width: 92%;
 }
-#fill .property-field{
+.property-box .property-field{
     padding: 3px 5px 2px 3px;
     display: flex;
     flex-wrap: nowrap;
@@ -240,13 +240,13 @@ animation-iteration-count: infinite;
     color: var(--label);
     text-transform: uppercase;
 }
-#fill div .property-title{
+.property-box div .property-title{
     width: 60%;
     line-break: anywhere;
     padding: 0 10px 0 0;
     box-sizing: border-box;
 }
-#fill div .shape-fill-color{
+.property-box div .property-value{
     width: 40%;
     height: 24px;
     border: 0;
