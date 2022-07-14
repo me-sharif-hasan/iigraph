@@ -18,7 +18,7 @@ let canvas=document.getElementById("canvas");
             if(shape.selected()){
                 let elm=null;
                 if(document.getElementById(id)==undefined){
-                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title" align="center">'+shape.name+'</div><input type=text class="shape-fill-color" data-hidecolorpicker="false" data-coloris></input></div>');
+                    elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title" align="center">'+shape.name+'</div><input type=text class="shape-fill-color property-value" data-hidecolorpicker="false" data-coloris></input></div>');
                     elm.childNodes[1].value=primaryColor;
                     elm.childNodes[1].style.background=primaryColor;
                     $(elm.childNodes[1]).on("click",function(e){
@@ -52,6 +52,33 @@ let canvas=document.getElementById("canvas");
             }else{
                 if(document.getElementById(id)!=undefined){
                     document.getElementById(id).remove();
+                }
+            }
+        });
+
+        $(factory).on("select",function(shape){
+            let id=shape.name;
+            let elm;
+            let moveUpdate=function(e){
+                let x=shape.getBBox().x;
+                let y=shape.getBBox().y;
+                elm.childNodes[1].value=x;
+                elm.childNodes[2].value=y;
+            }
+            if(shape.selected()){
+                let x=shape.getBBox().x;
+                let y=shape.getBBox().y;
+                elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title" align="center">'+shape.name+'</div><input type="number" class="shape-move property-value" value='+x+'></input><input type="number" class="shape-move property-value" value='+y+'></input></div>');
+                $([elm.childNodes[1],elm.childNodes[2]]).on("input",function(e){
+                    let p=shape.getBBox();
+                    shape.moveAll(p.x-elm.childNodes[1].value,p.y-elm.childNodes[2].value,true);
+                });
+                document.getElementById("move").appendChild(elm);
+                $(shape).on(["move","scale","rotate"],moveUpdate);
+            }else{
+                if(document.getElementById(id)!=undefined){
+                    document.getElementById(id).remove();
+                    $(shape).unset(["move","scale","rotate"],moveUpdate);
                 }
             }
         });

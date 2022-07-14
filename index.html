@@ -79,13 +79,24 @@
                 <label for="shape-color-switch" class="title">Fill</label>
                 <div class="holder">
                     <div class="color subholder">
-                        <div id="fill"></div>
+                        <div id="fill" class="property-box"></div>
                     </div>
                 </div>
             </div>
+
+            <div class="drop">
+                <input type="checkbox" class="hidden toggler" id="shape-move-switch" checked>
+                <label for="shape-move-switch" class="title">Position</label>
+                <div class="holder">
+                    <div class="color subholder">
+                        <div id="move" class="property-box"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/svg-path-commander/dist/svg-path-commander.min.js"></script>
+    <script type="text/javascript" src="3rd-party/svg-path-commander.min.js"></script>
     <script type="text/javascript" src="src/lib/Path.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Circle.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Heart.js"></script>

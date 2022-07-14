@@ -36,7 +36,7 @@ class ShapeEventManager{
         },false,this);
         $(this.shape).on("move",function(e){
             if(ref.shape.handleManager!=undefined){
-                ref.shape.handleManager.showHandles();
+                //ref.shape.handleManager.showHandles();
             }
         });
         $(this.shape).on("scale",function(shape,e){
