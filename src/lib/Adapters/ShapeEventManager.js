@@ -66,7 +66,7 @@ class ShapeEventManager{
             ref.shape.factory.moveAllSelected(e[0],e[1]);
         });
 
-        $(this.shape).on("rotate",function(shape,e){
+        $(this.shape).on("do-rotate",function(shape,e){
             ref.shape.rotateAll(e.theta);
         });
         $(this.shape).on("before-rotate",function(shape,e){

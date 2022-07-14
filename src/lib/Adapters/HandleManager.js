@@ -90,7 +90,7 @@ class HandleManager{
                 ref.shape.callEvents("before-rotate",e);
                 st=1;
             }
-            ref.shape.callEvents("rotate",e);
+            ref.shape.callEvents("do-rotate",e);
             if(e.mouseup){
                 ref.shape.callEvents("after-rotate",e);
                 st=0;
