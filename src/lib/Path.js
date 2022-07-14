@@ -291,6 +291,7 @@ class Path{
             this.child.rotateAll(theta,center);
         }
         this.updatePath(allPaths);
+        this.callEvents("rotate")
     }
     /**
      * scaleAll scales all the shapes in the group.
