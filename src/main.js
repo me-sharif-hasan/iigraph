@@ -69,14 +69,16 @@ let canvas=document.getElementById("canvas");
                 let x=shape.getBBox().x;
                 let y=shape.getBBox().y;
                 elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title" align="center">'+shape.name+'</div><input type="number" class="shape-move property-value" value='+x+'></input><input type="number" class="shape-move property-value" value='+y+'></input></div>');
+                $([elm.childNodes[1],elm.childNodes[2]]).on("input",function(e){
+                    let p=shape.getBBox();
+                    shape.moveAll(p.x-elm.childNodes[1].value,p.y-elm.childNodes[2].value,true);
+                });
                 document.getElementById("move").appendChild(elm);
-                $(shape).on("move",moveUpdate);
-                $(shape).on("scale",moveUpdate);
+                $(shape).on(["move","scale","rotate"],moveUpdate);
             }else{
                 if(document.getElementById(id)!=undefined){
                     document.getElementById(id).remove();
-                    shape.removeEventListener("move",moveUpdate);
-                    shape.removeEventListener("scale",moveUpdate);
+                    $(shape).unset(["move","scale","rotate"],moveUpdate);
                 }
             }
         });

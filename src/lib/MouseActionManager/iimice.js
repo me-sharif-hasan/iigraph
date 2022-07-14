@@ -1,6 +1,20 @@
 class iimise{
+    element={
+        els:[],
+        addEventListener:function(evtname,fn,flag){
+            this.els.forEach(function(e){
+                e.addEventListener(evtname,fn,flag);
+            })
+        },
+        removeEventListener:function(evtname,fn,flag){
+            this.els.forEach(function(e){
+                e.removeEventListener(evtname,fn,flag);
+            })
+        }
+    }
     constructor(element){
-        this.element=element;
+        if(!Array.isArray(element)) element=[element];
+        this.element.els=element;
     }
     /**
      * Will set a event listener
@@ -10,14 +24,23 @@ class iimise{
      * @param {boolean} flag Flag
      */
     on(eventName,functionName,flag,data){
-        if(eventName=="drag") this.createDragEvent(functionName,flag,data);
-        else if(eventName=="group") this.createGroupEvent(functionName,flag,data);
-        else if(eventName=="ungroup") this.createUngroupGroupEvent(functionName,flag,data);
-        else if(eventName=="delete") this.createDeleteEvent(functionName,flag,data);
-        else{
-            this.element.addEventListener(eventName,functionName,flag);
-            return this;
-        }
+        if(!Array.isArray(eventName)) eventName=[eventName];
+        if(!Array.isArray(functionName)) functionName=[functionName];
+        // if(!Array.isArray(flag)) flag=[flag];
+        // if(!Array.isArray(data)) flag=[data];
+        let ref=this;   
+        eventName.forEach(function(evt){
+            functionName.forEach(function(fn){
+                if(evt=="drag") ref.createDragEvent(fn,flag,data);
+                else if(evt=="group") ref.createGroupEvent(fn,flag,data);
+                else if(evt=="ungroup") ref.createUngroupGroupEvent(fn,flag,data);
+                else if(evt=="delete") ref.createDeleteEvent(fn,flag,data);
+                else{
+                    ref.element.addEventListener(evt,fn,flag);
+                }
+            });
+        });
+        return this;  
     }
 
     /**
@@ -27,7 +50,14 @@ class iimise{
      * @param {boolean} flag Flag
      */
     unset(eventName,functionName,flag){
-        this.element.removeEventListener(eventName,functionName,flag);
+        let ref=this;
+        if(!Array.isArray(eventName)) eventName=[eventName];
+        if(!Array.isArray(functionName)) functionName=[functionName];
+        eventName.forEach(function(evt){
+            functionName.forEach(function(fn){
+                ref.element.removeEventListener(evt,fn,flag);
+            });
+        });
         return this;
     }
     captureClick(elm){

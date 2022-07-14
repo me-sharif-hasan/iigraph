@@ -448,8 +448,9 @@ class Path{
      * moveAll will move whole shape to a new position along x and y axis.
      * @param {Number} dx Shift along x axis.
      * @param {Number} dy Shift along y axis.
+     * @param {Boolean} ignoreEvents Ignore all bounded events, default false
      */
-    moveAll(dx,dy){
+    moveAll(dx,dy,ignoreEvents=false){
         let ref=this;
         let allD=[];
         this.path.map(function(shape){
@@ -459,7 +460,7 @@ class Path{
         });
         ref.updatePath(allD);
         this.getParant().handleManager.showHandles();
-       this.callEvents("move");
+        if(!ignoreEvents) this.callEvents("move");
     }
     /**
      * move will move specific path string to a new position along x and y axis.
@@ -563,7 +564,6 @@ class Path{
         this.events[name]=this.events[name].filter(function(f){
             return f.toString()!=fn.toString();
         });
-        console.log(this.events[name].length);
     }
     /**
      * Call the associated events
