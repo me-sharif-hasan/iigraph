@@ -70,6 +70,9 @@ class Factory{
             case "rightangle-triangle":
                 shape=new RightAngleTriangle(this.canvas);
             break;
+            case "cube":
+                shape=new Cube(this.canvas);
+            break;
         }
         shape.addFactory(this);
         let ref=this;
@@ -139,6 +142,16 @@ class Factory{
         });
         return items;
     }
+
+    mirrorSelected(vertical=false){
+        let shapes=this.getselected();
+        shapes.forEach(function(shape){
+            //ignore child shapes, paranet will do the mirroring for them.
+            if(shape.parent!=undefined) return;
+            shape.mirror(vertical);
+        });
+    }
+
     clone(){
        // [...this.allShapes]
     }

@@ -6,12 +6,16 @@ let canvas=document.getElementById("canvas");
                 factory.create(x.target.name);
             });
         });
-        $(document.getElementById("shape-to-back")).on("click",function(e){
-            factory.selectedGoBack();
+        $([document.getElementById("shape-to-back"),document.getElementById("shape-to-front")]).on("click",function(e){
+            if(e.target.dataset.btn=="1") factory.selectedGoBack(); factory.selectedComeFront();
         });
-        $(document.getElementById("shape-to-front")).on("click",function(e){
-            factory.selectedComeFront();
+
+
+        $([document.getElementById("mirror-horizontal"),document.getElementById("mirror-vertical")]).on("click",function(e){
+            if(e.target.dataset.btn=="1") factory.mirrorSelected(false); else factory.mirrorSelected(true);
         });
+
+
         $(factory).on("select",function(shape){
             let id=shape.name;
             let primaryColor=shape.getFillColor();

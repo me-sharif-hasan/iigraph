@@ -66,11 +66,15 @@
         <div class="right-sidebar">
             <div class="drop">
                 <input type="checkbox" class="hidden toggler" id="shape-position-switch" checked>
-                <label for="shape-position-switch" class="title">Stack</label>
+                <label for="shape-position-switch" class="title">Options</label>
                 <div class="holder">
                     <div class="positioner subholder">
-                        <input class="button-type-1 " id="shape-to-back" type="image" src="ui/icons/sendback.svg"/>
-                        <input class="button-type-1" id="shape-to-front" type="image" src="ui/icons/bringforward.svg"/>
+                        <input class="button-type-1 " id="shape-to-back" type="image" src="ui/icons/sendback.svg" data-btn="1"/>
+                        <input class="button-type-1" id="shape-to-front" type="image" src="ui/icons/bringforward.svg" data-btn="2"/>
+                    </div>
+                    <div class="subholder mirror">
+                        <input class="button-type-1 " id="mirror-horizontal" type="image" src="ui/icons/mirror-horizontal.svg" data-btn="1"/>
+                        <input class="button-type-1" id="mirror-vertical" type="image" src="ui/icons/mirror-vertical.svg" data-btn="2"/>
                     </div>
                 </div>
             </div>
@@ -104,6 +108,7 @@
     <script type="text/javascript" src="src/lib/Shapes/Cloud.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Finger.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Isotherm.js"></script>
+    <script type="text/javascript" src="src/lib/Shapes/Cube.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/RightAngleTriangle.js"></script>
     <script type="text/javascript" src="src/lib/Shapes/Rectangle.js"></script>
     <script type="text/javascript" src="src/lib/Adapters/HandleManager.js"></script>
