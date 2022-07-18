@@ -7,7 +7,7 @@ let canvas=document.getElementById("canvas");
             });
         });
         $([document.getElementById("shape-to-back"),document.getElementById("shape-to-front")]).on("click",function(e){
-            if(e.target.dataset.btn=="1") factory.selectedGoBack(); factory.selectedComeFront();
+            if(e.target.dataset.btn=="1") factory.selectedGoBack(); else factory.selectedComeFront();
         });
 
 
@@ -63,19 +63,19 @@ let canvas=document.getElementById("canvas");
         $(factory).on("select",function(shape){
             let id=shape.name;
             let elm;
-            let moveUpdate=function(e){
-                let x=shape.getBBox().x;
-                let y=shape.getBBox().y;
-                elm.childNodes[1].value=x;
-                elm.childNodes[2].value=y;
+            let moveUpdate=function(shape,d){
+                let pos=shape.getParant().getBBox();
+                elm.childNodes[1].value=pos.x;
+                elm.childNodes[2].value=pos.y;
             }
             if(shape.selected()){
                 let x=shape.getBBox().x;
                 let y=shape.getBBox().y;
                 elm=htmlToElement('<div id="'+id+'" class="property-field"><div class="property-title" align="center">'+shape.name+'</div><input type="number" class="shape-move property-value" value='+x+'></input><input type="number" class="shape-move property-value" value='+y+'></input></div>');
                 $([elm.childNodes[1],elm.childNodes[2]]).on("input",function(e){
-                    let p=shape.getBBox();
-                    shape.moveAll(p.x-elm.childNodes[1].value,p.y-elm.childNodes[2].value,true);
+                    if(e.target!=this) return;
+                    let p=shape.getParant().getBBox();
+                    shape.getParant().moveAll(p.x-elm.childNodes[1].value,p.y-elm.childNodes[2].value);
                 });
                 document.getElementById("move").appendChild(elm);
                 $(shape).on(["move","scale","rotate"],moveUpdate);
