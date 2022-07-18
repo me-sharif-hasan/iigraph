@@ -148,7 +148,7 @@ class Factory{
         shapes.forEach(function(shape){
             //ignore child shapes, paranet will do the mirroring for them.
             if(shape.parent!=undefined) return;
-            shape.mirror(vertical);
+            shape.mirrorAll(vertical);
         });
     }
 

@@ -440,8 +440,20 @@ class Path{
         return pathData;
     }
 
-    mirror(vertical=false){
-        //TODO: Implement mirror operation
+    mirrorAll(vertical=false,pos){
+        if(pos==undefined) pos=this.getBBox();
+        let shape=this.getPaths();
+        let allPaths=[]
+        shape.forEach(function(path,idx){
+            let d=path.getAttribute("d");
+            let options={rotate:(vertical?[0,180,180]:[180,0,180]),origin:[pos.x+pos.width/2,pos.y+pos.height/2]};
+            let s=new SVGPathCommander(d).transform(options).toString();
+            allPaths.push(s);
+        });
+        if(this.child!=undefined){
+            this.child.mirrorAll(vertical,pos);
+        }
+        this.updatePath(allPaths);
     }
 
     getParant(){
@@ -455,7 +467,8 @@ class Path{
      * @param {Number} dy Shift along y axis.
      * @param {Boolean} ignoreEvents Ignore all bounded events, default false
      */
-    moveAll(dx,dy,ignoreEvents=false){
+    moveAll(dx,dy,data={}){
+        if(this.parent!=undefined&&data.byParant!=true) return;
         let ref=this;
         let allD=[];
         this.path.map(function(shape){
@@ -463,9 +476,10 @@ class Path{
             let sd=ref.move(dx,dy,d);
             allD.push(sd);
         });
+        if(this.child!=undefined) this.child.moveAll(dx,dy,{"byParant":true});
         ref.updatePath(allD);
         this.getParant().handleManager.showHandles();
-        if(!ignoreEvents) this.callEvents("move");
+        this.callEvents("move",{"dx":dx,"dy":"dy","data":data});
     }
     /**
      * move will move specific path string to a new position along x and y axis.
@@ -517,7 +531,7 @@ class Path{
             let temp=this.isSelected;
             this.isSelected=value;
             if(temp!=value){
-                if(event!=undefined) this.selectedWithCtrl=event.ctrlKey;
+                if(event!=undefined)this.selectedWithCtrl=event.ctrlKey;
                 this.callEvents("select",event);
             }
             if(value==true){
@@ -525,7 +539,7 @@ class Path{
             }else{
                 this.factory.selectionAdapter.removeShape(this);
             }
-            if(this.child!=undefined) this.child.selected(value);
+            if(this.child!=undefined) this.child.selected(value,event);
         }
         return this.isSelected;
     }
