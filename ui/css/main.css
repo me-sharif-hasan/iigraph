@@ -176,9 +176,11 @@ a:hover{
     }
 }
 .selection-rect{
-    fill: none;
-    stroke: rgb(62, 119, 204);
-    stroke-width: 0.7;
+    fill: #213b791a;
+    stroke: rgb(58, 137, 255);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    stroke-dasharray: 4;
 }
 .handle-lines{
 fill: none;
