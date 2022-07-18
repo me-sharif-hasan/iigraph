@@ -440,6 +440,10 @@ class Path{
         return pathData;
     }
 
+    mirror(vertical=false){
+        //TODO: Implement mirror operation
+    }
+
     getParant(){
         if(this.parent==undefined) return this;
         return this.parent.getParant();
