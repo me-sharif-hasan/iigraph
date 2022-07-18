@@ -67,7 +67,7 @@ class ShapeEventManager{
         });
 
         $(this.shape).on("do-rotate",function(shape,e){
-            ref.shape.rotateAll(e.theta);
+            ref.shape.rotateAll(e.theta,e.middle);
         });
         $(this.shape).on("before-rotate",function(shape,e){
             ref.shape.setMainOrigin(false);

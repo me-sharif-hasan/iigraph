@@ -61,10 +61,11 @@ class HandleManager{
 
         this.rotator=[rhandle,center];
         $(center).on("drag",function(e){
-            let dx=e.difference.x;
-            let dy=e.difference.y;
-            center.setAttribute("cx",center.getAttribute("cx")-dx);
-            center.setAttribute("cy",center.getAttribute("cy")-dy);
+            let dx=center.getAttribute("cx")-e.difference.x;
+            let dy=center.getAttribute("cy")-e.difference.y;
+            if(isNaN(dx)||isNaN(dy)) return;
+            center.setAttribute("cx",dx);
+            center.setAttribute("cy",dy);
         });
 
         let handSize=function(x,y,px,py){
@@ -75,6 +76,7 @@ class HandleManager{
             let sp = undefined, mp = undefined;
             mp = {x:center.getAttribute("cx")*1,y:center.getAttribute("cy")*1};
             sp = {x:rhandle.getAttribute("cx")*1,y:rhandle.getAttribute("cy")};
+            if(!e.mousemove) return;
             var p = {x:e.mousemove.layerX, y:e.mousemove.layerY};
             var sAngle = Math.atan2((sp.y-mp.y),(sp.x - mp.x));
             var pAngle = Math.atan2((p.y-mp.y),(p.x - mp.x));        
@@ -90,6 +92,7 @@ class HandleManager{
                 ref.shape.callEvents("before-rotate",e);
                 st=1;
             }
+            e.middle=mp;
             ref.shape.callEvents("do-rotate",e);
             if(e.mouseup){
                 ref.shape.callEvents("after-rotate",e);
@@ -104,16 +107,17 @@ class HandleManager{
         this.shape.addParameter("r",5,rhandle);
         this.shape.addParameter("data-handleid","rotate_handle",rhandle);  
 
-        this.shape.addParameter("stroke",5,center);
         this.shape.addParameter("r",5,center);
-        this.shape.addParameter("data-handleid","center_control",center);  
-
+        this.shape.addParameter("data-handleid","center_control",center); 
+        this.shape.addParameter("class","center-control",center); 
+ 
+        this.shape.addParameter("class","rotate-circle",rhandle);  
         this.shape.addParameter("cx",x+10,rhandle);
         this.shape.addParameter("cy",y-10,rhandle);
         this.shape.addParameter("cx",cx,center);
         this.shape.addParameter("cy",cy,center);
 
-        return [this.rotator[0]];
+        return this.rotator;
     }
     createHandleCircle(cx,cy,id){
         let ref=this;

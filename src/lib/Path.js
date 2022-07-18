@@ -306,7 +306,7 @@ class Path{
         this.path.map(function(shape,idx){
             let d=shape.getAttribute("d");
             let sd=ref.scale(dx,dy,d,handle,idx);
-            if(sd==false ||!willUpdate||sd.match(NaN)!=null||sd.match(Infinity)!=null) {willUpdate=false;return;}
+            if(sd==false ||!willUpdate||sd.match(NaN)!=null||sd.match(Infinity)!=null) {willUpdate=false;return false;}
             allD.push(sd);
         });
         if(willUpdate){

@@ -86,6 +86,8 @@ class iimise{
 
             let sx=mousedown.clientX;
             let sy=mousedown.clientY;
+            let currentCursor=window.getComputedStyle(mousedown.target)["cursor"];
+            document.body.style.cursor=currentCursor;
             let mouseMoveHandler=function(mousemove){
                 dragEvent["difference"]={"x":sx-mousemove.clientX,"y":sy-mousemove.clientY};
                 sx=mousemove.clientX;
@@ -100,6 +102,7 @@ class iimise{
                 wmv.unset("mousemove",mouseMoveHandler,flag);
                 wmv.unset("mouseup",mouseUpHandler,flag);
                 dragEvent["mouseup"]=mouseup;
+                document.body.style.cursor="default";
                 functionName(dragEvent);
             }
 

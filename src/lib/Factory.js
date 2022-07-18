@@ -73,6 +73,9 @@ class Factory{
             case "cube":
                 shape=new Cube(this.canvas);
             break;
+            case "face":
+                shape=new Face(this.canvas);
+            break;
         }
         shape.addFactory(this);
         let ref=this;

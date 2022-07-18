@@ -2,6 +2,7 @@
     --sidebar_width: 17%;
     --navigationbar_height: 66px;
     --move_icon: url(icons/move.png);
+    --rotate_icon: url(icons/rotate.png);
     --label: #264653;
     --links: #189ab4;
     --icons: #2a9d8f;
@@ -198,6 +199,15 @@ animation-iteration-count: infinite;
 .handle-circle:hover,.handle-circle-hover{
     fill: blue;
     r:7px;
+}
+.rotate-circle{
+    cursor:var(--rotate_icon) 14 14,auto;
+}
+.center-control{
+    cursor: crosshair;
+    fill: black;
+    stroke-width: 4;
+    stroke: red;
 }
 .shape{
     cursor: var(--move_icon) 14 14,auto;
