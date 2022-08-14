@@ -20,7 +20,7 @@ https://me-sharif-hasan.github.io/iigraph/index.html
 
 ## Features
 
-- Uses SVG and Vanija JavaScript with HTML.
+- Uses SVG and Vanilla JavaScript with HTML.
 - Drag and Drop (TODO).
 - Visual Shape property editor.
 - Layer System.
